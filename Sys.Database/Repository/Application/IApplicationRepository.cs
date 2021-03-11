@@ -14,6 +14,8 @@ namespace Sys.Database.Repository.Application
 
         List<Model.DataBase.GrantType> CreateGrantType(Model.DataBase.GrantType grantType);
 
+        Model.DataBase.GrantType GetGrantType(Model.DataBase.GrantType grantType);
+
         void ConfigClientScop(Model.DataBase.ClitScopes clitScopes);
 
         void ConfigClientGrantType(Model.DataBase.ClitGrantType clitGrantType);

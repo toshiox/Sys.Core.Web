@@ -4,20 +4,20 @@ GO
 --*
 Alter Procedure [Aplicativos].[Pr_SCRT_INSERT]
 (
-     @Name  	     varchar(50)
-    ,@Desc		     varchar(100)
-    ,@DataRegister	 datetime
+     @UNIQ_KEY  	 varchar(50)
+    ,@SCRT		     varchar(100)
+    ,@DT_CAD	 datetime
 )
 As
 Begin
  
- INSERT INTO [Aplicativos].[SCOPES]
-           ([NOME]
-           ,[DESCR]
+ INSERT INTO [Aplicativos].[SCRT]
+           (FK_APP
+           ,SCRT
            ,[DT_CAD])
      VALUES
-           (@Name
-           ,@Desc
-           ,@DataRegister)
+           (@UNIQ_KEY
+           ,@SCRT
+           ,@DT_CAD)
 End;
 GO

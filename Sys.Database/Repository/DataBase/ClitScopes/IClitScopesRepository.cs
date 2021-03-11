@@ -9,5 +9,6 @@ namespace Sys.Database.Repository.DataBase.ClitScopes
         Task<Model.DataBase.ClitScopes> InsertAsync(Model.DataBase.ClitScopes model);
         List<Model.DataBase.ClitScopes> List();
         List<Model.DataBase.ClitScopes> ListById(Model.DataBase.ClitScopes model);
+        List<Model.DataBase.ClitScopes> ListByScopeId(Model.DataBase.ClitScopes model);
     }
 }

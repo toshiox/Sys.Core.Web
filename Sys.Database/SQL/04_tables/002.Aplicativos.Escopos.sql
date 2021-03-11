@@ -13,3 +13,4 @@ CREATE TABLE [Aplicativos].[SCOPES]
     DT_CAD datetime
 )
 GO
+

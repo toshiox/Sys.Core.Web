@@ -65,6 +65,11 @@ namespace Sys.Database.Repository.Application
             return _grantTypeRepository.List();
         }
 
+        public GrantType GetGrantType(GrantType grantType)
+        {
+             return _grantTypeRepository.ListByName(grantType);
+        }
+
         public List<Model.DataBase.Scope> CreateScopes(Model.DataBase.Scope scope)
         {
             if (!_scopeRepository.List().Exists(scp => scp.Name == scope.Name))
@@ -75,7 +80,7 @@ namespace Sys.Database.Repository.Application
 
         public void ConfigClientScop(ClitScopes clitScopes)
         {
-            if (_clitScopesRepository.ListById(clitScopes) == null)
+            if (_clitScopesRepository.ListByScopeId(clitScopes).Count == 0)
                 _clitScopesRepository.Insert(clitScopes);
         }
 
@@ -124,7 +129,10 @@ namespace Sys.Database.Repository.Application
                 {
                     ClientId = UniqueKey
                 });
-                
+
+                if(Scopes.Count != application.ListScope.Count)
+                    throw new Exception("Não foram passados todos os escopos para acessar Client");
+
                 //Usa o ID dos escopos para buscar as definições
                 application.Scope = new List<Scope>();
                 foreach (var item in application.ListScope)
@@ -153,6 +161,9 @@ namespace Sys.Database.Repository.Application
                 {
                     Id = application.ListGrantType.GrantTypeId
                 });
+
+                if(application.GrantType.Type != grantType)
+                    throw new Exception($"Grant_Type {grantType} não foi atribuido para o Client {application.Client.UniqueKey}");
 
                 application.Result = new Model.Application.Result()
                 {

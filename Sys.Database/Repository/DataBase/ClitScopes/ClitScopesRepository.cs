@@ -35,6 +35,28 @@ namespace Sys.Database.Repository.DataBase.ClitScopes
 
             return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Aplicativos].[Pr_CLITSCOP_LIST001]", listOfParameters))?.ToList();
         }
+
+        public List<Model.DataBase.ClitScopes> ListByScopeId(Model.DataBase.ClitScopes model)
+        {
+            List<IDbDataParameter> listOfParameters = new System.Collections.Generic.List<IDbDataParameter>();
+            SqlParameter parameter = null;
+
+            parameter = new System.Data.SqlClient.SqlParameter("@FK_APP", SqlDbType.VarChar)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.ClientId
+            };
+            listOfParameters.Add(parameter);
+
+            parameter = new System.Data.SqlClient.SqlParameter("@SCOP_ID", SqlDbType.VarChar)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.ScopeId
+            };
+            listOfParameters.Add(parameter);
+
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Aplicativos].[Pr_CLITSCOP_LIST002]", listOfParameters))?.ToList();
+        }
         #endregion
 
         #region Insert

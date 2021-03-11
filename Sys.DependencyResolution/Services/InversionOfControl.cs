@@ -9,7 +9,8 @@ namespace Sys.DependencyResolution.Services
     {
         public void ConfigureDependencies(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddScoped<Sys.Services.Abstract.IGenerateToken, Sys.Services.Authentication.GenerateToken>();
+            serviceCollection.AddScoped<Sys.Services.Abstract.ITokenManegerService, Sys.Services.Action.TokenManegerService>();
+            serviceCollection.AddScoped<Sys.Services.Abstract.IApplicationService, Sys.Services.Action.ApplicationService>();
         }
     }
 }
