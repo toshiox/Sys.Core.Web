@@ -40,11 +40,12 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Authentication.Token))]
         public async Task<ActionResult<Model.Authentication.RequestToken>> ValidateToken()
         {
-            return await  _tokenManegerService.ValidateToken(new Model.Authentication.ValidateToken()
-            {   
-                httpContext = HttpContext,
-                ClientId = ""
-            });
+            return await  _tokenManegerService.ValidateToken(
+                    new Model.Authentication.ValidateToken()
+                        {   
+                            httpContext = HttpContext,
+                            ClientId = ""
+                        });
         }
     }
 }

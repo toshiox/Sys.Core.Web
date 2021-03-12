@@ -15,6 +15,7 @@ namespace Sys.Web.Controllers
     {
         private readonly Services.Abstract.IApplicationService _applicationServices;
         private readonly Services.Abstract.ITokenManegerService _tokenManegerService;
+        private readonly Services.Configuration.ApplicationConfiguration _configuration;
 
         public ApplicationController(
                 Services.Abstract.IApplicationService applicationServices,
@@ -23,6 +24,7 @@ namespace Sys.Web.Controllers
         {
             _applicationServices = applicationServices;
             _tokenManegerService = tokenManegerService;
+            _configuration = new Services.Configuration.ApplicationConfiguration();
         }
 
         [HttpPost]
@@ -35,11 +37,12 @@ namespace Sys.Web.Controllers
         public async Task<ActionResult<Database.Model.Application.Application>> GenerateToken([FromBody] Model.Application.Application modelApplication)
         {
             var Validate = _tokenManegerService.ValidateToken(
-                    new Model.Authentication.ValidateToken() 
-                    { 
-                        httpContext= HttpContext, 
-                        ClientId = "6f632e95-c0fd-4073-8add-cb622010d053"
-                    }).Result;
+                        new Model.Authentication.ValidateToken() 
+                        { 
+                            httpContext= HttpContext, 
+                            ClientId = _configuration.GetClientID()
+                        }
+                    ).Result;
 
             if (Validate.Result.Success)
             {
