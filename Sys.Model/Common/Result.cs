@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sys.Services.Model.Common
+namespace Sys.Model.Common
 {
     public class Result
     {

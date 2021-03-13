@@ -8,7 +8,6 @@ namespace Sys.Services.Abstract
     public interface ITokenManegerService
     {
         Task<Token> CreateToken(RequestToken requestToken);
-
         Task<RequestToken> ValidateToken(ValidateToken validateToken);
     }
 }

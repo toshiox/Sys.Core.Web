@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Sys.Model.Database.Aplicativos;
 
 namespace Sys.Services.Action
 {
@@ -16,14 +17,14 @@ namespace Sys.Services.Action
             _applicationRepository = applicationRepository;
         }
 
-        public Task<Database.Model.Application.Application> CreateApplication(Sys.Model.Application.Application application)
+        public Task<Database.Model.Application.ApplicationRepository> CreateApplication(Sys.Model.Application.Application application)
         {
-            Database.Model.Application.Application modelApplication = new Database.Model.Application.Application();
+            Database.Model.Application.ApplicationRepository modelApplication = new Database.Model.Application.ApplicationRepository();
 
             try
             {
                 #region Criar Aplicacao
-                modelApplication.Client = new Database.Model.DataBase.Client()
+                modelApplication.Client = new Client()
                 {
                     Active = true,
                     DateRegister = DateTime.Now,
@@ -38,7 +39,7 @@ namespace Sys.Services.Action
                 #endregion
 
                 #region Criar Segredo da Aplicação
-                modelApplication.Secret = new Database.Model.DataBase.Secret()
+                modelApplication.Secret = new Secret()
                 {
                     DataRegister = DateTime.Now,
                     SecretValue = application.SecretValue,
@@ -49,11 +50,11 @@ namespace Sys.Services.Action
                 #endregion
 
                 #region Criar Escopos
-                List<Database.Model.DataBase.Scope> listScopeResult = new List<Database.Model.DataBase.Scope>();
+                List<Scope> listScopeResult = new List<Scope>();
 
                 foreach (var item in application.Scopes)
                 {
-                    var model = new Database.Model.DataBase.Scope()
+                    var model = new Scope()
                     {
                         Name = item.ScopeName,
                         Description = item.Description,
@@ -65,14 +66,14 @@ namespace Sys.Services.Action
                 #endregion
 
                 #region Configurar Escopos da Aplicação
-                modelApplication.Scope = new List<Database.Model.DataBase.Scope>();
+                modelApplication.Scope = new List<Scope>();
 
                 foreach (var item in listScopeResult)
                 {
                     if (application.Scopes.Exists(ap => ap.ScopeName == item.Name))
                     {
                         _applicationRepository.ConfigClientScop(
-                            new Database.Model.DataBase.ClitScopes
+                            new ClitScopes
                             {
                                 DataRegister = System.DateTime.Now,
                                 ClientId = modelApplication.Client.UniqueKey,
@@ -86,14 +87,14 @@ namespace Sys.Services.Action
                 #endregion
 
                 #region Configurar GrantType da Aplicação
-                List<Database.Model.DataBase.ClitGrantType> listClitGrantTypeCreate = new List<Database.Model.DataBase.ClitGrantType>();
+                List<ClitGrantType> listClitGrantTypeCreate = new List<ClitGrantType>();
 
                 listClitGrantTypeCreate.Add(
-                        new Database.Model.DataBase.ClitGrantType()
+                        new ClitGrantType()
                         {
                             ClientId = modelApplication.Client.UniqueKey,
                             DataRegister = System.DateTime.Now,
-                            GrantTypeId = _applicationRepository.GetGrantType(new Database.Model.DataBase.GrantType()
+                            GrantTypeId = _applicationRepository.GetGrantType(new GrantType()
                             {
                                 Type = application.GrantType
                             }).Id
@@ -105,25 +106,19 @@ namespace Sys.Services.Action
                 }
 
                 modelApplication.GrantType = _applicationRepository.GetGrantType(
-                    new Database.Model.DataBase.GrantType()
+                    new GrantType()
                     {
                         Type = application.GrantType
                     });
                 #endregion
 
-                modelApplication.Result = new Database.Model.Application.Result()
-                {
-                    Success = true,
-                    ResultMessage = "Aplicação Criada com Sucesso"
-                };
+                modelApplication.Success = true;
+                modelApplication.ResultMessage = "Aplicação Criada com Sucesso";
             }
             catch (Exception ex)
             {
-                modelApplication.Result = new Database.Model.Application.Result()
-                {
-                    Success = true,
-                    ResultMessage = $"Ocorreu um Erro ao criar aplicação, Erro: {ex.Message}"
-                };
+                modelApplication.Success = true;
+                modelApplication.ResultMessage = $"Ocorreu um Erro ao criar aplicação, Erro: {ex.Message}";
             }
             return Task.FromResult(modelApplication);
         }

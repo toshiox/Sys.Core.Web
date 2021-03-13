@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Services", "Sys.Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Web", "Sys.Web\Sys.Web.csproj", "{D96D1976-5CFA-421F-80DD-0503D3C9239E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sys.Model", "Sys.Model\Sys.Model.csproj", "{04867188-A1C5-4980-BCAD-7D4ACEB51566}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sys.Model", "Sys.Model\Sys.Model.csproj", "{04867188-A1C5-4980-BCAD-7D4ACEB51566}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

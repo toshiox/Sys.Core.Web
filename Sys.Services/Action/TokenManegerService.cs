@@ -13,6 +13,7 @@ namespace Sys.Services.Action
     public class TokenManegerService : Abstract.ITokenManegerService
     {
         Database.Repository.Application.IApplicationRepository _applicationRepository;
+
         public TokenManegerService(
             Database.Repository.Application.IApplicationRepository applicationRepository
             )
@@ -24,13 +25,13 @@ namespace Sys.Services.Action
         {
             Token tokenModel = new Token();
             ClaimsIdentity claimsIdentity = new ClaimsIdentity();
-            Database.Model.Application.Application application = new Database.Model.Application.Application();
+            Database.Model.Application.ApplicationRepository application = new Database.Model.Application.ApplicationRepository();
             try
             {
                 var model = _applicationRepository.ClientVerify(requestToken.ClientId, requestToken.Secret, requestToken.ClientScope, requestToken.ClientGrantType);
 
-                if (!model.Result.Success)
-                    throw new Exception($"Cliente não encontrado. Erro: {model.Result.ResultMessage}");
+                if (!model.Success)
+                    throw new Exception($"Cliente não encontrado. Erro: {model.ResultMessage}");
 
                 var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -56,7 +57,7 @@ namespace Sys.Services.Action
                 tokenHandler.CreateToken(tokenDescriptor);
 
                 tokenModel.Success = true;
-                tokenModel.Message = "Token gerado com sucesso";
+                tokenModel.ResultMessage = "Token gerado com sucesso";
                 tokenModel.DateValidade = tokenDescriptor.Expires;
                 tokenModel.TokenAccess = tokenHandler.WriteToken(
                         tokenHandler.CreateToken(tokenDescriptor)
@@ -65,7 +66,7 @@ namespace Sys.Services.Action
             catch (Exception ex)
             {
                 tokenModel.Success = false;
-                tokenModel.Message = ex.Message;
+                tokenModel.ResultMessage = ex.Message;
             }
             return Task.FromResult(tokenModel);
         }
@@ -74,7 +75,6 @@ namespace Sys.Services.Action
         {
             RequestToken requestToken = new RequestToken();
             requestToken.ClientScope = new List<string>();
-            requestToken.Result = new Services.Model.Common.Result();
 
             try
             {
@@ -96,16 +96,16 @@ namespace Sys.Services.Action
                 }
 
                 var model = _applicationRepository.ClientVerify((validateToken.ClientId == "" ? requestToken.ClientId : validateToken.ClientId) , requestToken.Secret, requestToken.ClientScope, requestToken.ClientGrantType);
-                if (!model.Result.Success)
-                    throw new Exception($"Cliente não encontrado. Erro: {model.Result.ResultMessage}");
+                if (!model.Success)
+                    throw new Exception($"Cliente não encontrado. Erro: {model.ResultMessage}");
 
-                requestToken.Result.Success = true;
-                requestToken.Result.ResultMessage = "Token validado com sucesso.";
+                requestToken.Success = true;
+                requestToken.ResultMessage = "Token validado com sucesso.";
             }
             catch (Exception ex)
             {
-                requestToken.Result.Success = false;
-                requestToken.Result.ResultMessage = ex.Message;
+                requestToken.Success = false;
+                requestToken.ResultMessage = ex.Message;
             }
 
             return Task.FromResult(requestToken);

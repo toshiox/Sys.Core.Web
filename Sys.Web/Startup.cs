@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
+using System.Linq;
 
 namespace Sys.Web
 {
@@ -31,6 +32,7 @@ namespace Sys.Web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
             services.AddControllers();
@@ -53,7 +55,7 @@ namespace Sys.Web
                     NameClaimType = ClaimTypes.SerialNumber
                 };
             });
-            
+
             DependencyResolution.Startup startup = new DependencyResolution.Startup();
 
             startup.ConfigureDependencies(services);
@@ -64,18 +66,24 @@ namespace Sys.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+
+                app.UseSwaggerUi(c =>
+                {
+                    c.SwaggerEndpoint("swagger/v1/swagger.json", "MyAPI V1");
+                });
             }
 
             app.UseStaticFiles();
 
             app.UseHttpsRedirection();
-            
+
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseSwagger();
 
             //app.UseSwaggerUI();
 

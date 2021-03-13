@@ -4,10 +4,8 @@ using System.Text;
 
 namespace Sys.Model.Authentication
 {
-    public class Token
+    public class Token : Sys.Model.Common.Result
     {
-        public bool Success { get; set; }
-        public string Message { get; set; }
         public string TokenAccess { get; set; }
         public DateTime? DateValidade { get; set; }
     }

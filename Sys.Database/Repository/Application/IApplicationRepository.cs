@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Sys.Model.Database.Aplicativos;
 
 namespace Sys.Database.Repository.Application
 {
     public interface IApplicationRepository
     {
-        Model.DataBase.Client CreateApplication(Model.DataBase.Client client);
+        Client CreateApplication(Client client);
 
-        Model.DataBase.Secret CreateSecret(Model.DataBase.Secret SecretValue);
+        Secret CreateSecret(Secret SecretValue);
 
-        List<Model.DataBase.Scope> CreateScopes(Model.DataBase.Scope scope);
+        List<Scope> CreateScopes(Scope scope);
 
-        List<Model.DataBase.GrantType> CreateGrantType(Model.DataBase.GrantType grantType);
+        List<GrantType> CreateGrantType(GrantType grantType);
 
-        Model.DataBase.GrantType GetGrantType(Model.DataBase.GrantType grantType);
+        GrantType GetGrantType(GrantType grantType);
 
-        void ConfigClientScop(Model.DataBase.ClitScopes clitScopes);
+        void ConfigClientScop(ClitScopes clitScopes);
 
-        void ConfigClientGrantType(Model.DataBase.ClitGrantType clitGrantType);
+        void ConfigClientGrantType(ClitGrantType clitGrantType);
 
-        Model.Application.Application ClientVerify(string UniqueKey, string SecretValue, List<string> Scopes, string grantType);
+        Model.Application.ApplicationRepository ClientVerify(string UniqueKey, string SecretValue, List<string> Scopes, string grantType);
     }
 }

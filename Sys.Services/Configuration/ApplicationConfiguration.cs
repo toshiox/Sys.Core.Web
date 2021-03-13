@@ -17,7 +17,6 @@ namespace Sys.Services.Configuration
 
         public string GetClientID()
         {
-            
             return _configuration.Clients. Find(cl => cl.Name == "Application").ClientId.ToString();
         }
     }

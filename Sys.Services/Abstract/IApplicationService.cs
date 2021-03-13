@@ -7,6 +7,6 @@ namespace Sys.Services.Abstract
 {
     public interface IApplicationService
     {
-        Task<Database.Model.Application.Application> CreateApplication(Sys.Model.Application.Application application);
+        Task<Database.Model.Application.ApplicationRepository> CreateApplication(Sys.Model.Application.Application application);
     }
 }

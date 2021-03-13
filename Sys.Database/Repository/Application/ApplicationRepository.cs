@@ -1,5 +1,5 @@
-﻿using Sys.Database.Model.DataBase;
-using Sys.Database.Repository.Common;
+﻿using Sys.Database.Repository.Common;
+using Sys.Model.Database.Aplicativos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,7 +33,7 @@ namespace Sys.Database.Repository.Application
             _clitGranTypeRepository = clitGranTypeRepository;
         }
 
-        public Model.DataBase.Client CreateApplication(Model.DataBase.Client client)
+        public Client CreateApplication(Client client)
         {
             var listApplications = _clientRepository.List();
 
@@ -45,7 +45,7 @@ namespace Sys.Database.Repository.Application
             return client;
         }
 
-        public Model.DataBase.Secret CreateSecret(Model.DataBase.Secret secret)
+        public Secret CreateSecret(Secret secret)
         {
             var listSecret = _secretRepository.List();
 
@@ -57,7 +57,7 @@ namespace Sys.Database.Repository.Application
             return secret;
         }
 
-        public List<Model.DataBase.GrantType> CreateGrantType(Model.DataBase.GrantType grantType)
+        public List<GrantType> CreateGrantType(GrantType grantType)
         {
             if (!_grantTypeRepository.List().Exists(grt => grt.Type == grantType.Type))
                 _grantTypeRepository.Insert(grantType);
@@ -70,7 +70,7 @@ namespace Sys.Database.Repository.Application
              return _grantTypeRepository.ListByName(grantType);
         }
 
-        public List<Model.DataBase.Scope> CreateScopes(Model.DataBase.Scope scope)
+        public List<Scope> CreateScopes(Scope scope)
         {
             if (!_scopeRepository.List().Exists(scp => scp.Name == scope.Name))
                 _scopeRepository.Insert(scope);
@@ -90,27 +90,27 @@ namespace Sys.Database.Repository.Application
                 _clitGranTypeRepository.Insert(clitGrantType);
         }
 
-        public Model.Application.Application ClientVerify(string UniqueKey, string SecretValue, List<string> Scopes, string grantType)
+        public Model.Application.ApplicationRepository ClientVerify(string UniqueKey, string SecretValue, List<string> Scopes, string grantType)
         {
-            Model.Application.Application application = new Model.Application.Application();
+            Model.Application.ApplicationRepository application = new Model.Application.ApplicationRepository();
             try
             {
                 //Configura modelo para fazer verificação
-                application = new Database.Model.Application.Application()
+                application = new Database.Model.Application.ApplicationRepository()
                 {
-                    Client = new Database.Model.DataBase.Client()
+                    Client = new Client()
                     {
                         UniqueKey = UniqueKey
                     },
-                    Secret = new Database.Model.DataBase.Secret()
+                    Secret = new Secret()
                     {
                         FK_UniqueKeyApp = UniqueKey
                     },
-                    ListGrantType = new Database.Model.DataBase.ClitGrantType()
+                    ListGrantType = new ClitGrantType()
                     {
                         ClientId = UniqueKey
                     },
-                    ListScope = new List<Database.Model.DataBase.ClitScopes>(),
+                    ListScope = new List<ClitScopes>(),
                 };
 
                 application.Client = _clientRepository.ListByUniqueKey(application.Client);
@@ -165,20 +165,13 @@ namespace Sys.Database.Repository.Application
                 if(application.GrantType.Type != grantType)
                     throw new Exception($"Grant_Type {grantType} não foi atribuido para o Client {application.Client.UniqueKey}");
 
-                application.Result = new Model.Application.Result()
-                {
-                    Success = true,
-                    ResultMessage = "Client encontrado com sucesso"
-                };   
+                application.Success = true;
+                application.ResultMessage = "Client encontrado com sucesso";
             }
             catch (Exception ex)
             {
-                string MessageBase = "Ocorreu um erro durante a operação, Descrição: ";
-                application.Result = new Model.Application.Result()
-                {
-                    Success = false,
-                    ResultMessage = $"{MessageBase}{ex.Message}"
-                };
+                application.Success = false;
+                application.ResultMessage = $"Ocorreu um erro durante a operação, Descrição: {ex.Message}";
             }
 
             return application;

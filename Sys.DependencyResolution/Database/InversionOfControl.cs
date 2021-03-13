@@ -19,6 +19,8 @@ namespace Sys.DependencyResolution.Database
             serviceCollection.AddScoped<Sys.Database.Repository.DataBase.GrantType.IGrantTypeRepository, Sys.Database.Repository.DataBase.GrantType.GrantTypeRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.DataBase.ClitScopes.IClitScopesRepository, Sys.Database.Repository.DataBase.ClitScopes.ClitScopesRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.DataBase.ClitGranType.IClitGranTypeRepository, Sys.Database.Repository.DataBase.ClitGranType.ClitGranTypeRepository>();
+            
+            serviceCollection.AddScoped<Sys.Database.Repository.DataBase.Negocios.Empr.IEmprRepository, Sys.Database.Repository.DataBase.Negocios.Empr.EmprRepository>();
         }
     }
 }
