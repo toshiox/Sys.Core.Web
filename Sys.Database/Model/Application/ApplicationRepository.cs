@@ -3,7 +3,7 @@ using Sys.Model.Database.Aplicativos;
 
 namespace Sys.Database.Model.Application
 {
-    public class ApplicationRepository : Sys.Model.Common.Result
+    public class ApplicationRepository : Sys.Model.Services.Common.Result
     {
         public string UniqueKey { get; set; }
         public Client Client { get; set; }

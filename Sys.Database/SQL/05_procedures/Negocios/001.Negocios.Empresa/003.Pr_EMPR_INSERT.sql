@@ -51,5 +51,6 @@ INSERT INTO [Negocios].[EMPR]
            ,@END_CEP    
            ,@DT_CAD		
            );
+    SELECT * FROM [Negocios].[EMPR] WHERE [CNPJ] = @CNPJ;
 End;
 GO

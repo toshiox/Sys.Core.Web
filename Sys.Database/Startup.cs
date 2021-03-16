@@ -28,14 +28,14 @@ namespace Sys.Database
             #endregion
 
             #region DataBase
-            services.AddTransient<Repository.DataBase.IConfiguration, Repository.DataBase.Configuration>();
-            services.AddTransient<Repository.DataBase.Client.IClientRepository, Repository.DataBase.Client.ClientRepository>();
-            services.AddTransient<Repository.DataBase.Secret.ISecretRepository, Repository.DataBase.Secret.SecretRepository>();
-            services.AddTransient<Repository.DataBase.Scope.IScopeRepository, Repository.DataBase.Scope.ScopeRepository>();
-            services.AddTransient<Repository.DataBase.GrantType.IGrantTypeRepository, Repository.DataBase.GrantType.GrantTypeRepository>();
-            services.AddTransient<Repository.DataBase.ClitScopes.IClitScopesRepository, Repository.DataBase.ClitScopes.ClitScopesRepository>();
-            services.AddTransient<Repository.DataBase.ClitGranType.IClitGranTypeRepository, Repository.DataBase.ClitGranType.ClitGranTypeRepository>();
-            services.AddTransient<Repository.DataBase.Negocios.Empr.IEmprRepository, Repository.DataBase.Negocios.Empr.EmprRepository>();
+            services.AddTransient<Repository.Scheme.IConfiguration, Repository.Scheme.Configuration>();
+            services.AddTransient<Repository.Scheme.Aplicativos.Client.IClientRepository, Repository.Scheme.Aplicativos.Client.ClientRepository>();
+            services.AddTransient<Repository.Scheme.Aplicativos.Secret.ISecretRepository, Repository.Scheme.Aplicativos.Secret.SecretRepository>();
+            services.AddTransient<Repository.Scheme.Aplicativos.Scope.IScopeRepository, Repository.Scheme.Aplicativos.Scope.ScopeRepository>();
+            services.AddTransient<Repository.Scheme.Aplicativos.GrantType.IGrantTypeRepository, Repository.Scheme.Aplicativos.GrantType.GrantTypeRepository>();
+            services.AddTransient<Repository.Scheme.Aplicativos.ClitScopes.IClitScopesRepository, Repository.Scheme.Aplicativos.ClitScopes.ClitScopesRepository>();
+            services.AddTransient<Repository.Scheme.Aplicativos.ClitGranType.IClitGranTypeRepository, Repository.Scheme.Aplicativos.ClitGranType.ClitGranTypeRepository>();
+            services.AddTransient<Repository.Scheme.Negocios.Empr.IEmprRepository, Repository.Scheme.Negocios.Empr.EmprRepository>();
             #endregion
         }
 

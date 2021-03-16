@@ -1,4 +1,4 @@
-﻿using Sys.Database.Repository.Common;
+﻿using Sys.Model.Services.Struct.Database;
 using Sys.Model.Database.Aplicativos;
 using System;
 using System.Collections.Generic;
@@ -9,20 +9,20 @@ namespace Sys.Database.Repository.Application
 {
     public class ApplicationRepository : IApplicationRepository
     {
-        private readonly DataBase.Client.IClientRepository _clientRepository;
-        private readonly DataBase.Secret.ISecretRepository _secretRepository;
-        private readonly DataBase.Scope.IScopeRepository _scopeRepository;
-        private readonly DataBase.GrantType.IGrantTypeRepository _grantTypeRepository;
-        private readonly DataBase.ClitScopes.IClitScopesRepository _clitScopesRepository;
-        private readonly DataBase.ClitGranType.IClitGranTypeRepository _clitGranTypeRepository;
+        private readonly Scheme.Aplicativos.Client.IClientRepository _clientRepository;
+        private readonly Scheme.Aplicativos.Secret.ISecretRepository _secretRepository;
+        private readonly Scheme.Aplicativos.Scope.IScopeRepository _scopeRepository;
+        private readonly Scheme.Aplicativos.GrantType.IGrantTypeRepository _grantTypeRepository;
+        private readonly Scheme.Aplicativos.ClitScopes.IClitScopesRepository _clitScopesRepository;
+        private readonly Scheme.Aplicativos.ClitGranType.IClitGranTypeRepository _clitGranTypeRepository;
 
         public ApplicationRepository(
-            DataBase.Client.IClientRepository clientRepository,
-            DataBase.Secret.ISecretRepository secretRepository,
-            DataBase.Scope.IScopeRepository scopeRepository,
-            DataBase.GrantType.IGrantTypeRepository grantTypeRepository,
-            DataBase.ClitScopes.IClitScopesRepository clitScopesRepository,
-            DataBase.ClitGranType.IClitGranTypeRepository clitGranTypeRepository
+            Scheme.Aplicativos.Client.IClientRepository clientRepository,
+            Scheme.Aplicativos.Secret.ISecretRepository secretRepository,
+            Scheme.Aplicativos.Scope.IScopeRepository scopeRepository,
+            Scheme.Aplicativos.GrantType.IGrantTypeRepository grantTypeRepository,
+            Scheme.Aplicativos.ClitScopes.IClitScopesRepository clitScopesRepository,
+            Scheme.Aplicativos.ClitGranType.IClitGranTypeRepository clitGranTypeRepository
             )
         {
             _clientRepository = clientRepository;

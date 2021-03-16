@@ -10,7 +10,7 @@ CREATE TABLE [Aplicativos].[CLIT]
 	[PK_APP]	numeric(4) NOT NULL IDENTITY (1, 1),
 	[UNIQ_KEY]	varchar(50),
 	[NOME]		varchar(50) NOT NULL,
-	[DESC]		varchar(50) NOT NULL,
+	[DESC]		varchar(200) NOT NULL,
 	[ATV]		bit,
 	[DT_CAD]	datetime NOT NULL,
 	[DT_EXC]	datetime

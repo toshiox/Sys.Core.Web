@@ -4,7 +4,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
-using Sys.Model.Authentication;
+using Sys.Model.Services.Authentication;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
@@ -13,12 +13,14 @@ namespace Sys.Services.Action
     public class TokenManegerService : Abstract.ITokenManegerService
     {
         Database.Repository.Application.IApplicationRepository _applicationRepository;
+        private readonly Services.Configuration.ApplicationConfiguration _configuration;
 
         public TokenManegerService(
             Database.Repository.Application.IApplicationRepository applicationRepository
             )
         {
             _applicationRepository = applicationRepository;
+            _configuration = new Services.Configuration.ApplicationConfiguration();
         }
 
         public Task<Token> CreateToken(RequestToken requestToken)
@@ -39,7 +41,7 @@ namespace Sys.Services.Action
                 {
                     Expires = DateTime.UtcNow.AddHours(2),
                     SigningCredentials = new SigningCredentials(
-                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Sys.Model.Struct.Authentication.Token.Key)),
+                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Sys.Model.Services.Struct.Authentication.Token.Key)),
                                 SecurityAlgorithms.HmacSha256Signature
                             )
                 };
@@ -71,14 +73,14 @@ namespace Sys.Services.Action
             return Task.FromResult(tokenModel);
         }
 
-        public Task<RequestToken> ValidateToken(ValidateToken validateToken)
+        public Task<ValidateToken> ValidateToken(HttpContext httpContext)
         {
-            RequestToken requestToken = new RequestToken();
+            ValidateToken requestToken = new ValidateToken();
             requestToken.ClientScope = new List<string>();
 
             try
             {
-                var identity = validateToken.httpContext.User.Identity as ClaimsIdentity;
+                var identity = httpContext.User.Identity as ClaimsIdentity;
 
                 foreach (var claim in identity.Claims)
                 {
@@ -89,15 +91,22 @@ namespace Sys.Services.Action
                         requestToken.Secret = claim.Value;
 
                     if (claim.Type.Contains("nameidentifier"))
-                        requestToken.ClientId = claim.Value;
+                        requestToken.ClientId = Guid.Parse(claim.Value);
 
                     if (claim.Type.Contains("givenname"))
                         requestToken.ClientGrantType = claim.Value;
                 }
 
-                var model = _applicationRepository.ClientVerify((validateToken.ClientId == "" ? requestToken.ClientId : validateToken.ClientId) , requestToken.Secret, requestToken.ClientScope, requestToken.ClientGrantType);
-                if (!model.Success)
-                    throw new Exception($"Cliente não encontrado. Erro: {model.ResultMessage}");
+
+                if (_configuration.GetClientID(requestToken.ClientId))
+                {
+                    var model = _applicationRepository.ClientVerify(requestToken.ClientId.ToString(), requestToken.Secret, requestToken.ClientScope, requestToken.ClientGrantType);
+
+                    if (!model.Success)
+                        throw new Exception($"Cliente não encontrado. Erro: {model.ResultMessage}");
+                }
+                else
+                    throw new Exception($"ClientID {requestToken.ClientId} incorreto");
 
                 requestToken.Success = true;
                 requestToken.ResultMessage = "Token validado com sucesso.";

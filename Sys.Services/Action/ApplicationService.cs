@@ -17,7 +17,7 @@ namespace Sys.Services.Action
             _applicationRepository = applicationRepository;
         }
 
-        public Task<Database.Model.Application.ApplicationRepository> CreateApplication(Sys.Model.Application.Application application)
+        public Task<Database.Model.Application.ApplicationRepository> CreateApplication(Sys.Model.Services.Application.Application application)
         {
             Database.Model.Application.ApplicationRepository modelApplication = new Database.Model.Application.ApplicationRepository();
 

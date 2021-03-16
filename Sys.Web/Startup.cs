@@ -31,7 +31,8 @@ namespace Sys.Web
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "V1" });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
@@ -51,7 +52,7 @@ namespace Sys.Web
                     ValidateIssuerSigningKey = false,
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Model.Struct.Authentication.Token.Key)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Model.Services.Struct.Authentication.Token.Key)),
                     NameClaimType = ClaimTypes.SerialNumber
                 };
             });
@@ -72,7 +73,7 @@ namespace Sys.Web
 
                 app.UseSwaggerUi(c =>
                 {
-                    c.SwaggerEndpoint("swagger/v1/swagger.json", "MyAPI V1");
+                    c.SwaggerEndpoint("swagger/V1/swagger.json", "MyAPI V1");
                 });
             }
 

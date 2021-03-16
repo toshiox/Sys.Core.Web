@@ -15,12 +15,12 @@ namespace Sys.Database.Repository.JsonRepository
 
         public AppSettings ConfigFileToModel()
         {
-            return JsonSerializer.Deserialize<AppSettings>(System.IO.File.ReadAllText($"{Common.ConfigureConstants.Path}{Common.ConfigureConstants.FileName}"));
+            return JsonSerializer.Deserialize<AppSettings>(System.IO.File.ReadAllText($"{Sys.Model.Services.Struct.Database.ConfigureConstants.Path}"));
         }
 
         public string ReadConfigFile()
         {
-            return System.IO.File.ReadAllText($"{Common.ConfigureConstants.Path}{Common.ConfigureConstants.FileName}");
+            return System.IO.File.ReadAllText($"{Sys.Model.Services.Struct.Database.ConfigureConstants.Path}");
         }
     }
 }
