@@ -84,9 +84,8 @@ namespace Sys.Web
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseAuthorization();
 
-            //app.UseSwaggerUI();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

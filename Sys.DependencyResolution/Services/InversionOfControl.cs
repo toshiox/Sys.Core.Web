@@ -11,6 +11,7 @@ namespace Sys.DependencyResolution.Services
         {
             serviceCollection.AddScoped<Sys.Services.Abstract.ITokenManegerService, Sys.Services.Action.TokenManegerService>();
             serviceCollection.AddScoped<Sys.Services.Abstract.IApplicationService, Sys.Services.Action.ApplicationService>();
+            serviceCollection.AddScoped<Sys.Services.Abstract.ICompanyService, Sys.Services.Action.CompanyService>();
         }
     }
 }

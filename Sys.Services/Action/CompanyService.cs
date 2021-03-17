@@ -29,7 +29,7 @@ namespace Sys.Services.Action
                 companyRequest.Result.Success = true;
                 companyRequest.Result.ResultMessage = "Empresa cadastrada com sucesso.";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 companyRequest.Result.Success = false;
                 companyRequest.Result.ResultMessage = $"Ocorreu um erro ao cadastrar empresa. Descrição: {ex.Message}";
@@ -53,6 +53,45 @@ namespace Sys.Services.Action
             {
                 companyRequest.Result.Success = false;
                 companyRequest.Result.ResultMessage = $"Ocorreu um erro ao atualizar as informações da empresa. Descrição: {ex.Message}";
+            }
+            return Task.FromResult(companyRequest);
+        }
+
+        public Task<List<CompanyRequest>> ListCompany()
+        {
+            List<CompanyRequest> companyRequest = new List<CompanyRequest>();
+            try
+            {
+                var listCompany = _emprRepository.List();
+
+                foreach (var item in listCompany)
+                {
+                    companyRequest.Add(new CompanyRequest()
+                    {
+                        CCM = item.CCM,
+                        CEP = item.CEP,
+                        CNPJ = item.CNPJ,
+                        CompanyName = item.CompanyName,
+                        County = item.County,
+                        DataRegister = item.DataRegister,
+                        District = item.District,
+                        FantasyName = item.FantasyName,
+                        HouseNumber = item.HouseNumber,
+                        id = item.id,
+                        MainActivity = item.MainActivity,
+                        MainOccupation = item.MainOccupation,
+                        PublicPlace = item.PublicPlace,
+                        State = item.State,
+                        Result = new Model.Services.Common.Result()
+                        {
+                            Success = true,
+                            ResultMessage = "Dados da empresa atualizados com sucesso"
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
             }
             return Task.FromResult(companyRequest);
         }

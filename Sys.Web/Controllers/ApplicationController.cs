@@ -5,25 +5,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Sys.Web.Controllers
 {
     [ApiController]
     [Route("Application")]
-    public class ApplicationController : Controller
+    public class ApplicationController : Services.Common.BaseController<Model.Services.Application.Application>
     {
         private readonly Services.Abstract.IApplicationService _applicationServices;
-        private readonly Services.Abstract.ITokenManegerService _tokenManegerService;
         
         public ApplicationController(
                 Services.Abstract.IApplicationService applicationServices,
-                Services.Abstract.ITokenManegerService tokenManegerService
-            )
+                Services.Abstract.ITokenManegerService tokenManegerService,
+                ILogger<Model.Services.Application.Application> logger
+            ): base(logger, tokenManegerService)
         {
             _applicationServices = applicationServices;
-            _tokenManegerService = tokenManegerService;
-            
         }
 
         [HttpPost]

@@ -5,24 +5,24 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Sys.Web.Controllers
 {
     [ApiController]
     [Route("Authenticate")]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : Services.Common.BaseController<Model.Services.Authentication.Token>
     {
-        private readonly Services.Abstract.ITokenManegerService _tokenManegerService;
 
         public AuthenticationController(
-                Sys.Services.Abstract.ITokenManegerService tokenManegerService
-            )
+                Sys.Services.Abstract.ITokenManegerService tokenManegerService,
+                ILogger<Model.Services.Authentication.Token> logger
+            ) :base(logger, tokenManegerService)
         {
-            _tokenManegerService = tokenManegerService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GenerateToken")]
         [SwaggerOperation("Gerar Token", "Cria token de segurança para autenticar nas demais aplicações", Tags = new string[1] { "Authentication" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]

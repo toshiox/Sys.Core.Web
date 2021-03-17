@@ -8,7 +8,7 @@ namespace Sys.Services.Abstract
     public interface ICompanyService
     {
         Task<Model.Services.Company.CompanyRequest> RegisterCompany(Model.Database.Negocios.Empresa empresa);
-
         Task<Model.Services.Company.CompanyRequest> UpdateCompany(Model.Database.Negocios.Empresa empresa);
+        Task<List<Model.Services.Company.CompanyRequest>> ListCompany();
     }
 }
