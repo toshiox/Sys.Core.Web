@@ -20,7 +20,7 @@ namespace Sys.Web.Controllers
             Services.Abstract.ICompanyService companyService,
             Services.Abstract.ITokenManegerService tokenManegerService,
             ILogger<Empresa> logger
-            ) :base(logger, tokenManegerService)
+            ) : base(logger, tokenManegerService)
         {
             _companyService = companyService;
         }
@@ -37,7 +37,21 @@ namespace Sys.Web.Controllers
 
             if (Validate.Success)
             {
-                return await _companyService.RegisterCompany(empresa);
+                try
+                {
+                    return await _companyService.RegisterCompany(empresa);
+                }
+                catch (Exception ex)
+                {
+                    return new CompanyRequest()
+                    {
+                        Result = new Model.Services.Common.Result()
+                        {
+                            Success = false,
+                            ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                        }
+                    };
+                }
             }
             else
             {
@@ -46,7 +60,7 @@ namespace Sys.Web.Controllers
                     Result = new Model.Services.Common.Result()
                     {
                         Success = false,
-                        ResultMessage = $"Erro Durante a operação. Erro: {Validate.ResultMessage}"
+                        ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
                     }
                 };
             }
@@ -64,7 +78,21 @@ namespace Sys.Web.Controllers
 
             if (Validate.Success)
             {
-                return await _companyService.UpdateCompany(empresa);
+                try
+                {
+                    return await _companyService.UpdateCompany(empresa);
+                }
+                catch (Exception ex)
+                {
+                    return new CompanyRequest()
+                    {
+                        Result = new Model.Services.Common.Result()
+                        {
+                            Success = false,
+                            ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                        }
+                    };
+                }
             }
             else
             {
@@ -73,7 +101,7 @@ namespace Sys.Web.Controllers
                     Result = new Model.Services.Common.Result()
                     {
                         Success = false,
-                        ResultMessage = $"Erro Durante a operação. Erro: {Validate.ResultMessage}"
+                        ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
                     }
                 };
             }
@@ -92,7 +120,21 @@ namespace Sys.Web.Controllers
 
             if (Validate.Success)
             {
-                return await _companyService.ListCompany();
+                try
+                {
+                    return await _companyService.ListCompany();
+                }
+                catch (Exception ex)
+                {
+                    companyRequest.Add(new CompanyRequest()
+                    {
+                        Result = new Model.Services.Common.Result()
+                        {
+                            Success = true,
+                            ResultMessage = $"Erro Durante a operação. Erro: {ex.Message}"
+                        }
+                    });
+                }
             }
             else
             {
@@ -101,12 +143,13 @@ namespace Sys.Web.Controllers
                     Result = new Model.Services.Common.Result()
                     {
                         Success = true,
-                        ResultMessage = $"Erro Durante a operação. Erro: {Validate.ResultMessage}"
+                        ResultMessage = $"Token Invalido. Descricao: {Validate.ResultMessage}"
                     }
                 });
 
-                return companyRequest;
             }
+
+            return companyRequest;
         }
     }
 }

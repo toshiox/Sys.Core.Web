@@ -15,12 +15,12 @@ namespace Sys.Web.Controllers
     public class ApplicationController : Services.Common.BaseController<Model.Services.Application.Application>
     {
         private readonly Services.Abstract.IApplicationService _applicationServices;
-        
+
         public ApplicationController(
                 Services.Abstract.IApplicationService applicationServices,
                 Services.Abstract.ITokenManegerService tokenManegerService,
                 ILogger<Model.Services.Application.Application> logger
-            ): base(logger, tokenManegerService)
+            ) : base(logger, tokenManegerService)
         {
             _applicationServices = applicationServices;
         }
@@ -38,7 +38,18 @@ namespace Sys.Web.Controllers
 
             if (Validate.Success)
             {
-                return await _applicationServices.CreateApplication(modelApplication);
+                try
+                {
+                    return await _applicationServices.CreateApplication(modelApplication);
+                }
+                catch (Exception ex)
+                {
+                    return new Database.Model.Application.ApplicationRepository()
+                    {
+                        Success = false,
+                        ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
+                    };
+                }
             }
             else
             {

@@ -22,6 +22,7 @@ namespace Sys.DependencyResolution.Database
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Aplicativos.ClitGranType.IClitGranTypeRepository, Sys.Database.Repository.Scheme.Aplicativos.ClitGranType.ClitGranTypeRepository>();
                                                                 
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.Empr.IEmprRepository, Sys.Database.Repository.Scheme.Negocios.Empr.EmprRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.Finac.IFinacRepository, Sys.Database.Repository.Scheme.Negocios.Finac.FinacRepository>();
         }
     }
 }

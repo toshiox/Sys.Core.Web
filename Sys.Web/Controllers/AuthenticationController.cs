@@ -18,7 +18,7 @@ namespace Sys.Web.Controllers
         public AuthenticationController(
                 Sys.Services.Abstract.ITokenManegerService tokenManegerService,
                 ILogger<Model.Services.Authentication.Token> logger
-            ) :base(logger, tokenManegerService)
+            ) : base(logger, tokenManegerService)
         {
         }
 
@@ -27,9 +27,20 @@ namespace Sys.Web.Controllers
         [SwaggerOperation("Gerar Token", "Cria token de segurança para autenticar nas demais aplicações", Tags = new string[1] { "Authentication" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<ActionResult<Model.Services.Authentication.Token>> GenerateToken([FromBody]Model.Services.Authentication.RequestToken requestToken)
+        public async Task<ActionResult<Model.Services.Authentication.Token>> GenerateToken([FromBody] Model.Services.Authentication.RequestToken requestToken)
         {
-            return await _tokenManegerService.CreateToken(requestToken);
+            try
+            {
+                return await _tokenManegerService.CreateToken(requestToken);
+            }
+            catch (Exception ex)
+            {
+                return new Model.Services.Authentication.Token()
+                {
+                    Success = false,
+                    ResultMessage= $"Ocorreu um erro durante a operação: Descrição {ex.Message}"
+                };
+            }
         }
 
         [HttpGet]
@@ -41,7 +52,19 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<ActionResult<Model.Services.Authentication.ValidateToken>> ValidateToken()
         {
-            return await  _tokenManegerService.ValidateToken(HttpContext);
+            try
+            {
+                return await _tokenManegerService.ValidateToken(HttpContext);
+            }
+            catch (Exception ex)
+            {
+                return new Model.Services.Authentication.ValidateToken()
+                {
+                    Success = false,
+                    ResultMessage = $"Ocorreu um erro durante a operação: Descrição {ex.Message}"
+                };
+            }
+            
         }
     }
 }

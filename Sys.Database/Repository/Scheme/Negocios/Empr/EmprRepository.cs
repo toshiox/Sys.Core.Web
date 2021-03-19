@@ -17,7 +17,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
         #region List
         public List<Sys.Model.Database.Negocios.Empresa> List()
         {
-            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Aplicativos].[Pr_EMPR_LIST]"));
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_LIST]"));
         }
 
         public Sys.Model.Database.Negocios.Empresa ListById(Sys.Model.Database.Negocios.Empresa model)
@@ -32,7 +32,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
             };
             listOfParameters.Add(parameter);
 
-            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Aplicativos].[Pr_EMPR_LIST001]", listOfParameters))?.ToList().FirstOrDefault();
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_LIST001]", listOfParameters))?.ToList().FirstOrDefault();
         }
 
         #endregion
@@ -134,7 +134,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
             };
             listOfParameters.Add(parameter);
 
-            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Aplicativos].[Pr_EMPR_INSERT]", listOfParameters)).LastOrDefault();
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_INSERT]", listOfParameters)).LastOrDefault();
         }
         #endregion
 
@@ -235,7 +235,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
             };
             listOfParameters.Add(parameter);
 
-            ExecuteQuery("[Aplicativos].[Pr_EMPR_UPDATE]", listOfParameters);
+            ExecuteQuery("[Negocios].[Pr_EMPR_UPDATE]", listOfParameters);
         }
         #endregion
 
