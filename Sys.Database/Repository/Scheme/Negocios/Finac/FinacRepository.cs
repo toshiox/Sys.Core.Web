@@ -51,7 +51,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
         }
         #endregion
 
-        #region insert
+        #region Insert
         public Sys.Model.Database.Negocios.Finac Insert(Sys.Model.Database.Negocios.Finac model)
         {
             List<IDbDataParameter> listOfParameters = new System.Collections.Generic.List<IDbDataParameter>();
@@ -96,6 +96,23 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
         }
         #endregion
 
+        #region Delete
+        public void Delete(Sys.Model.Database.Negocios.Finac model)
+        {
+            List<IDbDataParameter> listOfParameters = new System.Collections.Generic.List<IDbDataParameter>();
+            SqlParameter parameter = null;
+
+            parameter = new System.Data.SqlClient.SqlParameter("@PK_FINAC", SqlDbType.VarChar)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.Id
+            };
+            listOfParameters.Add(parameter);
+
+            ExecuteQuery("[Negocios].[Pr_FINAC_DELETE]", listOfParameters);
+        }
+        #endregion
+
         #region Mapper
         public List<Sys.Model.Database.Negocios.Finac> LoopDataReaderRows(SqlDataReader sqlDataReader)
         {
@@ -125,7 +142,6 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
 
             return listFINACesa;
         }
-
         #endregion
     }
 }
