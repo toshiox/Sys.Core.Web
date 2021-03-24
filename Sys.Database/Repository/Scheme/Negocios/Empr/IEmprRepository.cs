@@ -9,7 +9,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
         Empresa Insert(Sys.Model.Database.Negocios.Empresa model);
         List<Empresa> List();
         Empresa ListById(Sys.Model.Database.Negocios.Empresa model);
-
+        Empresa ListByCnpj(Sys.Model.Database.Negocios.Empresa model);
         void Update(Sys.Model.Database.Negocios.Empresa model);
     }
 }

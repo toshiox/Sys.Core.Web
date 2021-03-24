@@ -11,9 +11,11 @@ namespace Sys.DependencyResolution.Database
         public void ConfigureDependencies(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<Sys.Database.Repository.Application.IApplicationRepository, Sys.Database.Repository.Application.ApplicationRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Business.IBusinessRepository, Sys.Database.Repository.Business.BusinessRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.JsonRepository.IJsonRepository, Sys.Database.Repository.JsonRepository.JsonRepository>();
 
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.IConfiguration, Sys.Database.Repository.Scheme.Configuration>();
+
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Aplicativos.Client.IClientRepository, Sys.Database.Repository.Scheme.Aplicativos.Client.ClientRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Aplicativos.Secret.ISecretRepository, Sys.Database.Repository.Scheme.Aplicativos.Secret.SecretRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Aplicativos.Scope.IScopeRepository, Sys.Database.Repository.Scheme.Aplicativos.Scope.ScopeRepository>();
@@ -23,6 +25,9 @@ namespace Sys.DependencyResolution.Database
                                                                 
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.Empr.IEmprRepository, Sys.Database.Repository.Scheme.Negocios.Empr.EmprRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.Finac.IFinacRepository, Sys.Database.Repository.Scheme.Negocios.Finac.FinacRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.Tax.ITaxRepository, Sys.Database.Repository.Scheme.Negocios.Tax.TaxRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.AssDig.IAssDigRepository, Sys.Database.Repository.Scheme.Negocios.AssDig.AssDigRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.TypFlx.ITypFlxRepository, Sys.Database.Repository.Scheme.Negocios.TypFlx.TypFlxRepository>();
         }
     }
 }

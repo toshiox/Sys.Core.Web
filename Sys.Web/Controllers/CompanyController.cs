@@ -45,11 +45,9 @@ namespace Sys.Web.Controllers
                 {
                     return new CompanyRequest()
                     {
-                        Result = new Model.Services.Common.Result()
-                        {
-                            Success = false,
-                            ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
-                        }
+
+                        Success = false,
+                        ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
                     };
                 }
             }
@@ -57,16 +55,13 @@ namespace Sys.Web.Controllers
             {
                 return new CompanyRequest()
                 {
-                    Result = new Model.Services.Common.Result()
-                    {
-                        Success = false,
-                        ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
-                    }
+                    Success = false,
+                    ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
                 };
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("Update")]
         [SwaggerOperation("Atualiza Informações Empresa", "Atualiza informações cadastadas da empresa", Tags = new string[1] { "Company" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
@@ -86,11 +81,8 @@ namespace Sys.Web.Controllers
                 {
                     return new CompanyRequest()
                     {
-                        Result = new Model.Services.Common.Result()
-                        {
-                            Success = false,
-                            ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
-                        }
+                        Success = false,
+                        ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
                     };
                 }
             }
@@ -98,11 +90,8 @@ namespace Sys.Web.Controllers
             {
                 return new CompanyRequest()
                 {
-                    Result = new Model.Services.Common.Result()
-                    {
-                        Success = false,
-                        ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
-                    }
+                    Success = false,
+                    ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
                 };
             }
         }
@@ -128,11 +117,8 @@ namespace Sys.Web.Controllers
                 {
                     companyRequest.Add(new CompanyRequest()
                     {
-                        Result = new Model.Services.Common.Result()
-                        {
-                            Success = true,
-                            ResultMessage = $"Erro Durante a operação. Erro: {ex.Message}"
-                        }
+                        Success = true,
+                        ResultMessage = $"Erro Durante a operação. Erro: {ex.Message}"
                     });
                 }
             }
@@ -140,11 +126,8 @@ namespace Sys.Web.Controllers
             {
                 companyRequest.Add(new CompanyRequest()
                 {
-                    Result = new Model.Services.Common.Result()
-                    {
-                        Success = true,
-                        ResultMessage = $"Token Invalido. Descricao: {Validate.ResultMessage}"
-                    }
+                    Success = true,
+                    ResultMessage = $"Token Invalido. Descricao: {Validate.ResultMessage}"
                 });
 
             }

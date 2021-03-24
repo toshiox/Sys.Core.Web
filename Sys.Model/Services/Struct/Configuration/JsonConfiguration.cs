@@ -7,6 +7,6 @@ namespace Sys.Model.Services.Struct.Configuration
 {
     public struct JsonConfiguration
     {
-        public const string Path = "D:\\Toshio Soft\\Projetos\\Sys.Core.Web\\Sys.Services\\appsettings.json";
+        public const string Path = "D:\\Toshio Soft\\Projetos\\git\\Sys.Core.Web\\Sys.Services\\appsettings.json";
     }
 }

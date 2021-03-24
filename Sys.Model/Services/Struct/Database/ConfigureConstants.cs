@@ -7,6 +7,6 @@ namespace Sys.Model.Services.Struct.Database
     public struct ConfigureConstants
     {
 
-        public const string Path = "D:\\Toshio Soft\\Projetos\\Sys.Core.Web\\Sys.Database\\appsettings.json";
+        public const string Path = "D:\\Toshio Soft\\Projetos\\git\\Sys.Core.Web\\Sys.Database\\appsettings.json";
     }
 }

@@ -71,10 +71,10 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
             };
             listOfParameters.Add(parameter);
 
-            parameter = new System.Data.SqlClient.SqlParameter("@DESC_VLR", SqlDbType.Int)
+            parameter = new System.Data.SqlClient.SqlParameter("@DESC_VLR", SqlDbType.VarChar)
             {
                 Direction = ParameterDirection.Input,
-                Value = model.IdCompany
+                Value = model.Description
             };
             listOfParameters.Add(parameter);
 
@@ -92,7 +92,7 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
             };
             listOfParameters.Add(parameter);
 
-            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_INSERT]", listOfParameters)).LastOrDefault();
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_FINAC_INSERT]", listOfParameters)).LastOrDefault();
         }
         #endregion
 
@@ -122,11 +122,11 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
             {
                 var item = new Sys.Model.Database.Negocios.Finac()
                 {
-                    Id = sqlDataReader.GetInt32(0),
+                    Id = sqlDataReader.GetDecimal(0),
                     IdCompany = sqlDataReader.GetInt32(1),
                     IdFlowType = sqlDataReader.GetInt32(2),
                     Description = sqlDataReader.GetString(3),
-                    Value = sqlDataReader.GetFloat(4)
+                    Value = sqlDataReader.GetDouble(4)
                 };
 
                 if (!sqlDataReader.IsDBNull(5))

@@ -13,17 +13,17 @@ namespace Sys.Services.Action
     public class TokenManegerService : Abstract.ITokenManegerService
     {
         Database.Repository.Application.IApplicationRepository _applicationRepository;
-        private readonly Services.Configuration.ApplicationConfiguration _configuration;
+        private readonly Configuration.ApplicationConfiguration _configuration;
 
         public TokenManegerService(
             Database.Repository.Application.IApplicationRepository applicationRepository
             )
         {
             _applicationRepository = applicationRepository;
-            _configuration = new Services.Configuration.ApplicationConfiguration();
+            _configuration = new Configuration.ApplicationConfiguration();
         }
 
-        public Task<Token> CreateToken(RequestToken requestToken)
+        public Task<Token> CreateServiceToken(RequestToken requestToken)
         {
             Token tokenModel = new Token();
             ClaimsIdentity claimsIdentity = new ClaimsIdentity();
@@ -96,7 +96,6 @@ namespace Sys.Services.Action
                     if (claim.Type.Contains("givenname"))
                         requestToken.ClientGrantType = claim.Value;
                 }
-
 
                 if (_configuration.GetClientID(requestToken.ClientId))
                 {

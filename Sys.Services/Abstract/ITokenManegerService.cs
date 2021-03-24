@@ -7,7 +7,7 @@ namespace Sys.Services.Abstract
 {
     public interface ITokenManegerService
     {
-        Task<Token> CreateToken(RequestToken requestToken);
+        Task<Token> CreateServiceToken(RequestToken requestToken);
         Task<ValidateToken> ValidateToken(HttpContext httpContext);
     }
 }

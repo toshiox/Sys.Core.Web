@@ -32,7 +32,7 @@ namespace Sys.Web
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "V1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
@@ -68,12 +68,11 @@ namespace Sys.Web
             {
                 app.UseDeveloperExceptionPage();
 
-                // Enable middleware to serve generated Swagger as a JSON endpoint.
                 app.UseSwagger();
 
                 app.UseSwaggerUi(c =>
                 {
-                    c.SwaggerEndpoint("swagger/V1/swagger.json", "MyAPI V1");
+                    c.SwaggerEndpoint("swagger/v1/swagger.json", "MyAPI V1");
                 });
             }
 

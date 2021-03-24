@@ -35,6 +35,21 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
             return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_LIST001]", listOfParameters))?.ToList().FirstOrDefault();
         }
 
+        public Sys.Model.Database.Negocios.Empresa ListByCnpj(Sys.Model.Database.Negocios.Empresa model)
+        {
+            List<IDbDataParameter> listOfParameters = new System.Collections.Generic.List<IDbDataParameter>();
+            SqlParameter parameter = null;
+
+            parameter = new System.Data.SqlClient.SqlParameter("@CNPJ", SqlDbType.VarChar)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.CNPJ
+            };
+            listOfParameters.Add(parameter);
+
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_LIST002]", listOfParameters))?.ToList().FirstOrDefault();
+        }
+
         #endregion
 
         #region insert

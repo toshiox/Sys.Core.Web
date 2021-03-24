@@ -14,7 +14,6 @@ namespace Sys.Web.Controllers
     [Route("Authenticate")]
     public class AuthenticationController : Services.Common.BaseController<Model.Services.Authentication.Token>
     {
-
         public AuthenticationController(
                 Sys.Services.Abstract.ITokenManegerService tokenManegerService,
                 ILogger<Model.Services.Authentication.Token> logger
@@ -31,7 +30,7 @@ namespace Sys.Web.Controllers
         {
             try
             {
-                return await _tokenManegerService.CreateToken(requestToken);
+                return await _tokenManegerService.CreateServiceToken(requestToken);
             }
             catch (Exception ex)
             {

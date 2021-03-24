@@ -23,5 +23,7 @@ INSERT INTO [Negocios].[FINAC]
            ,@DESC_VLR
            ,@VLR     
            ,@DT_CAD  )
+
+SELECT TOP 1 * FROM [Negocios].[FINAC] ORDER BY [DT_CAD] DESC
 End;
 GO
