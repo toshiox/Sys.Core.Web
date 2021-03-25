@@ -29,7 +29,15 @@ namespace Sys.Web
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "Documentação API's", 
+                    Version = "v1", 
+                    Contact = new OpenApiContact()
+                    {
+                        Email = "gustavotoshiowow@gmail.com",
+                        Name = "Toshio Watanabe"
+                    }
+                });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             });
 
@@ -69,7 +77,7 @@ namespace Sys.Web
 
                 app.UseSwaggerUi(c =>
                 {
-                    c.SwaggerEndpoint("swagger/v1/swagger.json", "MyAPI V1");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPI V1");
                 });
             }
 
