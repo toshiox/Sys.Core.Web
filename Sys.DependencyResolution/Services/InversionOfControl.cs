@@ -13,6 +13,7 @@ namespace Sys.DependencyResolution.Services
             serviceCollection.AddScoped<Sys.Services.Abstract.IApplicationService, Sys.Services.Action.ApplicationService>();
             serviceCollection.AddScoped<Sys.Services.Abstract.ICompanyService, Sys.Services.Action.CompanyService>();
             serviceCollection.AddScoped<Sys.Services.Abstract.IBusinessService, Sys.Services.Action.BusinessService>();
+            serviceCollection.AddScoped<Sys.Services.Abstract.ICryptographyService, Sys.Services.Action.CryptographyService>();
         }
     }
 }

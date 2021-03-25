@@ -4,8 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authorization;
-using Swashbuckle.AspNetCore.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -15,7 +13,6 @@ using System.Linq;
 
 namespace Sys.Web
 {
-
     public class Startup
     {
         public Startup(IConfiguration configuration)
