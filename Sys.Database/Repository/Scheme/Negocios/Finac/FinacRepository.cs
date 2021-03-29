@@ -85,6 +85,13 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
             };
             listOfParameters.Add(parameter);
 
+            parameter = new System.Data.SqlClient.SqlParameter("@MES_REF", SqlDbType.VarChar)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.MonthReference
+            };
+            listOfParameters.Add(parameter);
+
             parameter = new System.Data.SqlClient.SqlParameter("@DT_CAD", SqlDbType.DateTime)
             {
                 Direction = ParameterDirection.Input,
@@ -126,11 +133,12 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
                     IdCompany = sqlDataReader.GetInt32(1),
                     IdFlowType = sqlDataReader.GetInt32(2),
                     Description = sqlDataReader.GetString(3),
-                    Value = sqlDataReader.GetDouble(4)
+                    Value = sqlDataReader.GetDouble(4),
+                    MonthReference = sqlDataReader.GetString(5)
                 };
 
-                if (!sqlDataReader.IsDBNull(5))
-                    item.DataRegister = sqlDataReader.GetDateTime(5);
+                if (!sqlDataReader.IsDBNull(6))
+                    item.DataRegister = sqlDataReader.GetDateTime(6);
 
                 listFINACesa.Add(item);
             }

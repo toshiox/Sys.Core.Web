@@ -27,7 +27,7 @@ namespace Sys.Web.Controllers
         [SwaggerOperation("Cadastrar Fluxo de Caixa", "Cadastro fluxo de caixa de empresa", Tags = new string[1] { "Business" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<Model.Services.Business.Flow> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
+        public async Task<Model.Services.Common.Result> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
         {
             var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
 
@@ -35,11 +35,18 @@ namespace Sys.Web.Controllers
             {
                 try
                 {
-                    return await _businessService.RegisterFlow(model);
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _businessService.RegisterFlow(model);
+
+                    result.Success = true;
+                    result.ResultMessage = "Fluxo cadastrado com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    return new Model.Services.Business.Flow()
+                    return new Model.Services.Common.Result()
                     {
                         Success = false,
                         ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
@@ -48,7 +55,7 @@ namespace Sys.Web.Controllers
             }
             else
             {
-                return new Model.Services.Business.Flow()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
                     ResultMessage = $"Token invalido. Erro: {Validate.ResultMessage}"

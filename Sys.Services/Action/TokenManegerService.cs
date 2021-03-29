@@ -28,48 +28,40 @@ namespace Sys.Services.Action
             Token tokenModel = new Token();
             ClaimsIdentity claimsIdentity = new ClaimsIdentity();
             Database.Model.Application.ApplicationRepository application = new Database.Model.Application.ApplicationRepository();
-            try
+
+            var model = _applicationRepository.ClientVerify(requestToken.ClientId, requestToken.Secret, requestToken.ClientScope, requestToken.ClientGrantType);
+
+            if (!model.Success)
+                throw new Exception($"Cliente não encontrado. Erro: {model.ResultMessage}");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                var model = _applicationRepository.ClientVerify(requestToken.ClientId, requestToken.Secret, requestToken.ClientScope, requestToken.ClientGrantType);
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Sys.Model.Services.Struct.Authentication.Token.Key)),
+                            SecurityAlgorithms.HmacSha256Signature
+                        )
+            };
 
-                if (!model.Success)
-                    throw new Exception($"Cliente não encontrado. Erro: {model.ResultMessage}");
-
-                var tokenHandler = new JwtSecurityTokenHandler();
-
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Expires = DateTime.UtcNow.AddHours(2),
-                    SigningCredentials = new SigningCredentials(
-                        new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Sys.Model.Services.Struct.Authentication.Token.Key)),
-                                SecurityAlgorithms.HmacSha256Signature
-                            )
-                };
-
-                foreach (var item in model.Scope)
-                {
-                    claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, item.Name));
-                }
-                claimsIdentity.AddClaim(new Claim(ClaimTypes.SerialNumber, model.Secret.SecretValue));
-                claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.Client.UniqueKey));
-                claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, model.GrantType.Type));
-
-                tokenDescriptor.Subject = claimsIdentity;
-
-                tokenHandler.CreateToken(tokenDescriptor);
-
-                tokenModel.Success = true;
-                tokenModel.ResultMessage = "Token gerado com sucesso";
-                tokenModel.DateValidade = tokenDescriptor.Expires;
-                tokenModel.TokenAccess = tokenHandler.WriteToken(
-                        tokenHandler.CreateToken(tokenDescriptor)
-                    ).ToString();
-            }
-            catch (Exception ex)
+            foreach (var item in model.Scope)
             {
-                tokenModel.Success = false;
-                tokenModel.ResultMessage = ex.Message;
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, item.Name));
             }
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.SerialNumber, model.Secret.SecretValue));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.Client.UniqueKey));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, model.GrantType.Type));
+
+            tokenDescriptor.Subject = claimsIdentity;
+
+            tokenHandler.CreateToken(tokenDescriptor);
+
+
+            tokenModel.DateValidade = tokenDescriptor.Expires;
+            tokenModel.TokenAccess = tokenHandler.WriteToken(
+                    tokenHandler.CreateToken(tokenDescriptor)
+                ).ToString();
             return Task.FromResult(tokenModel);
         }
 

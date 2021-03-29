@@ -21,100 +21,72 @@ namespace Sys.Services.Action
             _emprRepository = emprRepository;
         }
 
-        public Task<Model.Services.Company.CompanyRequest> RegisterCompany(Empresa empresa)
+        public Task<Empresa> RegisterCompany(Empresa empresa)
         {
-            CompanyRequest companyRequest = new CompanyRequest();
+            empresa = _emprRepository.Insert(empresa);
 
-            try
-            {
-                var model = _emprRepository.Insert(empresa);
-
-                companyRequest.Success = true;
-                companyRequest.ResultMessage = "Empresa cadastrada com sucesso.";
-            }
-            catch (Exception ex)
-            {
-                companyRequest.Success = false;
-                companyRequest.ResultMessage = $"Ocorreu um erro ao cadastrar empresa. Descrição: {ex.Message}";
-            }
-            return Task.FromResult(companyRequest);
+            return Task.FromResult(empresa);
         }
 
-        public Task<CompanyRequest> UpdateCompany(Empresa empresa)
+        public Task<Empresa> UpdateCompany(Empresa empresa)
         {
-            CompanyRequest companyRequest = new CompanyRequest();
+            _emprRepository.Update(empresa);
 
-            try
-            {
-                _emprRepository.Update(empresa);
-
-                companyRequest.Success = true;
-                companyRequest.ResultMessage = "Dados da empresa atualizados com sucesso";
-            }
-            catch (Exception ex)
-            {
-                companyRequest.Success = false;
-                companyRequest.ResultMessage = $"Ocorreu um erro ao atualizar as informações da empresa. Descrição: {ex.Message}";
-            }
-            return Task.FromResult(companyRequest);
+            return Task.FromResult(empresa);
         }
 
         public Task<List<CompanyRequest>> ListCompany()
         {
             List<CompanyRequest> companyRequest = new List<CompanyRequest>();
-            var model = new CompanyRequest();
-            try
+
+            var listCompany = _emprRepository.List();
+
+            foreach (var item in listCompany)
             {
-                var listCompany = _emprRepository.List();
-
-                foreach (var item in listCompany)
+                companyRequest.Add(new CompanyRequest()
                 {
-                    companyRequest.Add(new CompanyRequest() { 
-                        Empresa = new Empresa()
-                        {
-                            CCM = item.CCM,
-                            CEP = item.CEP,
-                            CNPJ = item.CNPJ,
-                            CompanyName = item.CompanyName,
-                            County = item.County,
-                            DataRegister = item.DataRegister,
-                            District = item.District,
-                            FantasyName = item.FantasyName,
-                            HouseNumber = item.HouseNumber,
-                            id = item.id,
-                            MainActivity = item.MainActivity,
-                            MainOccupation = item.MainOccupation,
-                            PublicPlace = item.PublicPlace,
-                            State = item.State,
-                        }
-                    });
-                }
-
-                for(int i = 0; i < companyRequest.Count; i++)
-                {
-                    var taxes = _taxRepository.ListByCompany(new Tax() { IdCompany = Convert.ToInt32(companyRequest[i].Empresa.id) });
-
-                    if (taxes != null)
+                    Empresa = new Empresa()
                     {
-                        companyRequest[i].Taxas = new Tax()
-                        {
-                            COFINS = taxes.COFINS,
-                            CSLL = taxes.CSLL,
-                            DataRegister = taxes.DataRegister,
-                            Id = taxes.Id,
-                            IdCompany = taxes.IdCompany,
-                            INSS = taxes.INSS,
-                            IRRF = taxes.IRRF,
-                            ISS = taxes.ISS,
-                            PIS = taxes.PIS,
-                            SimpleRate = taxes.SimpleRate
-                        };
+                        CCM = item.CCM,
+                        CEP = item.CEP,
+                        CNPJ = item.CNPJ,
+                        CompanyName = item.CompanyName,
+                        County = item.County,
+                        DataRegister = item.DataRegister,
+                        District = item.District,
+                        FantasyName = item.FantasyName,
+                        HouseNumber = item.HouseNumber,
+                        id = item.id,
+                        MainActivity = item.MainActivity,
+                        MainOccupation = item.MainOccupation,
+                        PublicPlace = item.PublicPlace,
+                        State = item.State,
                     }
+                });
+            }
+
+            for (int i = 0; i < companyRequest.Count; i++)
+            {
+                var taxes = _taxRepository.ListByCompany(new Tax() { IdCompany = Convert.ToInt32(companyRequest[i].Empresa.id) });
+
+                if (taxes != null)
+                {
+                    companyRequest[i].Taxas = new Tax()
+                    {
+                        COFINS = taxes.COFINS,
+                        CSLL = taxes.CSLL,
+                        DataRegister = taxes.DataRegister,
+                        Id = taxes.Id,
+                        IdCompany = taxes.IdCompany,
+                        INSS = taxes.INSS,
+                        IRRF = taxes.IRRF,
+                        ISS = taxes.ISS,
+                        PIS = taxes.PIS,
+                        SimpleRate = taxes.SimpleRate
+                    };
                 }
             }
-            catch (Exception ex)
-            {
-            }
+
             return Task.FromResult(companyRequest);
         }
     }

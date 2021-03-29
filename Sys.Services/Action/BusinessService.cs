@@ -27,42 +27,29 @@ namespace Sys.Services.Action
                 Value = model.Value
             };
 
-            try
-            {
-                Model.Database.Negocios.Empresa empresa = _businessRepository.GetEmpresa(
-                    new Model.Database.Negocios.Empresa()
-                    {
-                        CNPJ = model.CNPJ
-                    });
-
-                Model.Database.Negocios.TypFlx typFlx = _businessRepository.GetFlowType(
-                    new Model.Database.Negocios.TypFlx()
-                    {
-                        TypeFlow = model.FlowType
-                    });
-
-                Model.Database.Negocios.Finac finac = _businessRepository.RegisterFlow(
-                    new Model.Database.Negocios.Finac()
-                    {
-                        IdCompany = empresa.id,
-                        IdFlowType = typFlx.Id,
-                        Description = model.Description,
-                        Value = model.Value,
-                        DataRegister = System.DateTime.Now
-                    });
-
-                flow.IdFlow = finac.Id;
-                flow.Success = true;
-                flow.ResultMessage = "Fluxo cadastrado com sucesso";
-            }
-            catch (Exception ex)
-            {
-                return Task.FromResult(new Model.Services.Business.Flow()
+            Model.Database.Negocios.Empresa empresa = _businessRepository.GetEmpresa(
+                new Model.Database.Negocios.Empresa()
                 {
-                    Success = false,
-                    ResultMessage = $"Ocorreu um erro ao cadastrar o fluxo, descrição: {ex.Message}"
+                    CNPJ = model.CNPJ
                 });
-            }
+
+            Model.Database.Negocios.TypFlx typFlx = _businessRepository.GetFlowType(
+                new Model.Database.Negocios.TypFlx()
+                {
+                    TypeFlow = model.FlowType
+                });
+
+            Model.Database.Negocios.Finac finac = _businessRepository.RegisterFlow(
+                new Model.Database.Negocios.Finac()
+                {
+                    IdCompany = empresa.id,
+                    IdFlowType = typFlx.Id,
+                    Description = model.Description,
+                    Value = model.Value,
+                    DataRegister = System.DateTime.Now
+                });
+
+            flow.IdFlow = finac.Id;
 
             return Task.FromResult(flow);
         }

@@ -22,19 +22,26 @@ namespace Sys.Web.Controllers
         }
 
         [HttpGet]
-        [Route("GenerateToken")]
+        [Route("ServiceToken")]
         [SwaggerOperation("Gerar Token", "Cria token de segurança para autenticar nas demais aplicações", Tags = new string[1] { "Authentication" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<ActionResult<Model.Services.Authentication.Token>> GenerateToken([FromBody] Model.Services.Authentication.RequestToken requestToken)
+        public async Task<Model.Services.Common.Result> GenerateToken([FromBody] Model.Services.Authentication.RequestToken requestToken)
         {
             try
             {
-                return await _tokenManegerService.CreateServiceToken(requestToken);
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _tokenManegerService.CreateServiceToken(requestToken);
+
+                result.Success = true;
+                result.ResultMessage = "Token gerado com sucesso";
+
+                return result;
             }
             catch (Exception ex)
             {
-                return new Model.Services.Authentication.Token()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
                     ResultMessage= $"Ocorreu um erro durante a operação: Descrição {ex.Message}"
@@ -49,11 +56,18 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.RequestToken))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.RequestToken))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<ActionResult<Model.Services.Authentication.ValidateToken>> ValidateToken()
+        public async Task<Model.Services.Common.Result> ValidateToken()
         {
             try
             {
-                return await _tokenManegerService.ValidateToken(HttpContext);
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _tokenManegerService.ValidateToken(HttpContext);
+
+                result.Success = true;
+                result.ResultMessage = "Token validado com sucesso";
+
+                return result;
             }
             catch (Exception ex)
             {

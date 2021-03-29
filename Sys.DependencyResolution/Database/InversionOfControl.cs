@@ -28,6 +28,10 @@ namespace Sys.DependencyResolution.Database
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.Tax.ITaxRepository, Sys.Database.Repository.Scheme.Negocios.Tax.TaxRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.AssDig.IAssDigRepository, Sys.Database.Repository.Scheme.Negocios.AssDig.AssDigRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Negocios.TypFlx.ITypFlxRepository, Sys.Database.Repository.Scheme.Negocios.TypFlx.TypFlxRepository>();
+         
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Usuarios.Users.IUsersRepository, Sys.Database.Repository.Scheme.Usuarios.Users.UsersRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Usuarios.Credencials.ICredencialsRepository, Sys.Database.Repository.Scheme.Usuarios.Credencials.CredencialsRepository>();
+
         }
     }
 }

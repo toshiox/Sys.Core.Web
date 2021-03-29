@@ -31,7 +31,7 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<CompanyRequest> RegisterCompany([FromBody] Empresa empresa)
+        public async Task<Model.Services.Common.Result> RegisterCompany([FromBody] Empresa empresa)
         {
             var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
 
@@ -39,11 +39,17 @@ namespace Sys.Web.Controllers
             {
                 try
                 {
-                    return await _companyService.RegisterCompany(empresa);
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _companyService.RegisterCompany(empresa);
+                    result.Success = true;
+                    result.ResultMessage = "Empresa cadastrada com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    return new CompanyRequest()
+                    return new Model.Services.Common.Result()
                     {
 
                         Success = false,
@@ -53,7 +59,7 @@ namespace Sys.Web.Controllers
             }
             else
             {
-                return new CompanyRequest()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
                     ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
@@ -67,7 +73,7 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<CompanyRequest> UpdateCompany([FromBody] Empresa empresa)
+        public async Task<Model.Services.Common.Result> UpdateCompany([FromBody] Empresa empresa)
         {
             var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
 
@@ -75,11 +81,18 @@ namespace Sys.Web.Controllers
             {
                 try
                 {
-                    return await _companyService.UpdateCompany(empresa);
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _companyService.UpdateCompany(empresa);
+
+                    result.Success = true;
+                    result.ResultMessage = "Empresa Atualizada com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    return new CompanyRequest()
+                    return new Model.Services.Common.Result()
                     {
                         Success = false,
                         ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
@@ -88,7 +101,7 @@ namespace Sys.Web.Controllers
             }
             else
             {
-                return new CompanyRequest()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
                     ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
@@ -102,37 +115,40 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<List<CompanyRequest>> ListCompany()
+        public async Task<Model.Services.Common.Result> ListCompany()
         {
             var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
-            List<CompanyRequest> companyRequest = new List<CompanyRequest>();
 
             if (Validate.Success)
             {
                 try
                 {
-                    return await _companyService.ListCompany();
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _companyService.ListCompany();
+
+                    result.Success = true;
+                    result.ResultMessage = "Empresas listadas com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    companyRequest.Add(new CompanyRequest()
+                    return new Model.Services.Common.Result()
                     {
-                        Success = true,
-                        ResultMessage = $"Erro Durante a operação. Erro: {ex.Message}"
-                    });
+                        Success = false,
+                        ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                    };
                 }
             }
             else
             {
-                companyRequest.Add(new CompanyRequest()
+                return new Model.Services.Common.Result()
                 {
-                    Success = true,
-                    ResultMessage = $"Token Invalido. Descricao: {Validate.ResultMessage}"
-                });
-
+                    Success = false,
+                    ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
+                };
             }
-
-            return companyRequest;
         }
     }
 }
