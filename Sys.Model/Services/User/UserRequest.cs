@@ -6,11 +6,7 @@ namespace Sys.Model.Services.User
 {
     public class UserRequest
     {
-        public string Name { get; set; }
-        public string CPF { get; set; }
-        public string Gen { get; set; }
-        public DateTime DataBirth { get; set; }
         public string Login { get; set; }
-        public string PassWord { get; set; }
+        public string Password { get; set; }
     }
 }

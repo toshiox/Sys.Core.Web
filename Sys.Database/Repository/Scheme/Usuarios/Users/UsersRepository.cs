@@ -183,7 +183,7 @@ namespace Sys.Database.Repository.Scheme.Usuarios.Users
                 var item = new Sys.Model.Database.Usuarios.User()
                 {
                     Id = sqlDataReader.GetDecimal(0),
-                    UniqueKey = sqlDataReader.GetGuid(1),
+                    UniqueKey = sqlDataReader.GetString(1),
                     Name = sqlDataReader.GetString(2),
                     CPF = sqlDataReader.GetString(3),
                     Gen = sqlDataReader.GetString(4)

@@ -7,20 +7,25 @@ using System.Threading.Tasks;
 using Sys.Model.Services.Authentication;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Sys.Model.Services.User;
 
 namespace Sys.Services.Action
 {
     public class TokenManegerService : Abstract.ITokenManegerService
     {
         Database.Repository.Application.IApplicationRepository _applicationRepository;
+        Services.Abstract.IUserManagerService _userManagerService;
+
         private readonly Configuration.ApplicationConfiguration _configuration;
 
         public TokenManegerService(
-            Database.Repository.Application.IApplicationRepository applicationRepository
+            Database.Repository.Application.IApplicationRepository applicationRepository,
+            Abstract.IUserManagerService userManagerService
             )
         {
             _applicationRepository = applicationRepository;
             _configuration = new Configuration.ApplicationConfiguration();
+            _userManagerService = userManagerService;
         }
 
         public Task<Token> CreateServiceToken(RequestToken requestToken)
@@ -59,13 +64,11 @@ namespace Sys.Services.Action
 
 
             tokenModel.DateValidade = tokenDescriptor.Expires;
-            tokenModel.TokenAccess = tokenHandler.WriteToken(
-                    tokenHandler.CreateToken(tokenDescriptor)
-                ).ToString();
+            tokenModel.TokenAccess = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor)).ToString();
             return Task.FromResult(tokenModel);
         }
 
-        public Task<ValidateToken> ValidateToken(HttpContext httpContext)
+        public Task<ValidateToken> ValidateServiceToken(HttpContext httpContext)
         {
             ValidateToken requestToken = new ValidateToken();
             requestToken.ClientScope = new List<string>();
@@ -110,5 +113,37 @@ namespace Sys.Services.Action
 
             return Task.FromResult(requestToken);
         }
+
+        public async Task<Token> CreateUserToken(UserRequest userRequest)
+        {
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity();
+            Token token = new Token();
+
+            var user = await _userManagerService.GetUser(userRequest);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(
+                   new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Sys.Model.Services.Struct.Authentication.Token.Key)),
+                           SecurityAlgorithms.HmacSha256Signature
+                       )
+            };
+            
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.SerialNumber, user.PassWord));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.UniqueKey));
+
+            tokenDescriptor.Subject = claimsIdentity;
+            tokenHandler.CreateToken(tokenDescriptor);
+
+            token.DateValidade = tokenDescriptor.Expires;
+            token.TokenAccess = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor)).ToString();
+
+            return token;
+        }
+
+
     }
 }

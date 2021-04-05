@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
+using Sys.Model.Services.User;
 
 namespace Sys.Web.Controllers
 {
@@ -33,7 +34,6 @@ namespace Sys.Web.Controllers
                 Model.Services.Common.Result result = new Model.Services.Common.Result();
 
                 result.Data = await _tokenManegerService.CreateServiceToken(requestToken);
-
                 result.Success = true;
                 result.ResultMessage = "Token gerado com sucesso";
 
@@ -62,7 +62,7 @@ namespace Sys.Web.Controllers
             {
                 Model.Services.Common.Result result = new Model.Services.Common.Result();
 
-                result.Data = await _tokenManegerService.ValidateToken(HttpContext);
+                result.Data = await _tokenManegerService.ValidateServiceToken(HttpContext);
 
                 result.Success = true;
                 result.ResultMessage = "Token validado com sucesso";
@@ -78,6 +78,34 @@ namespace Sys.Web.Controllers
                 };
             }
             
+        }
+
+        [HttpGet]
+        [Route("UserToken")]
+        [SwaggerOperation("Gerar Token", "Cria token de segurança para segregação de acesso dos usuarios", Tags = new string[1] { "Authentication" })]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
+        public async Task<Model.Services.Common.Result> GenerateUserToken(UserRequest userRequest)
+        {
+            try
+            {
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _tokenManegerService.CreateUserToken(userRequest);
+
+                result.Success = true;
+                result.ResultMessage = "Token gerado com sucesso";
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new Model.Services.Common.Result()
+                {
+                    Success = false,
+                    ResultMessage = $"Ocorreu um erro durante a operação: Descrição {ex.Message}"
+                };
+            }
         }
     }
 }

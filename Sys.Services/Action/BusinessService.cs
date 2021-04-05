@@ -42,6 +42,7 @@ namespace Sys.Services.Action
             Model.Database.Negocios.Finac finac = _businessRepository.RegisterFlow(
                 new Model.Database.Negocios.Finac()
                 {
+                    MonthReference = model.MonthReference,
                     IdCompany = empresa.id,
                     IdFlowType = typFlx.Id,
                     Description = model.Description,

@@ -5,6 +5,7 @@ using Sys.Model.Services.User;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Sys.Services.Action
 {
@@ -25,7 +26,7 @@ namespace Sys.Services.Action
             _cryptographyService = cryptographyService;
         }
 
-        public Model.Database.Usuarios.User RegisterUser(UserRequest model)
+        public Task<Model.Database.Usuarios.User> RegisterUser(CreateUserRequest model)
         {
             Model.Database.Usuarios.User user = new Model.Database.Usuarios.User()
             {
@@ -34,17 +35,17 @@ namespace Sys.Services.Action
                 Name = model.Name,
                 DataBirth = model.DataBirth,
                 DataRegister = System.DateTime.Now,
-                UniqueKey = new Guid()
+                UniqueKey = Guid.NewGuid().ToString()
             };
 
-            if (string.IsNullOrEmpty(_usersRepository.ListByCPF(user).Name))
+            if (_usersRepository.ListByCPF(user) == null)
                 user = _usersRepository.Insert(user);
             else
                 throw new Exception("Usuário ja existe na base de dados");
 
             if (model.Login == "")
             {
-                var list = model.Login.Split(" ");
+                var list = model.Name.Split(" ");
                 string firstName = "";
                 string lastName = "";
 
@@ -57,7 +58,7 @@ namespace Sys.Services.Action
                         lastName = list[i];
                 }
 
-                model.Login = $"{firstName}.{lastName}";
+                model.Login = $"{firstName}.{lastName}".ToLower();
             }
 
             Model.Database.Usuarios.Credencials credencials = new Model.Database.Usuarios.Credencials()
@@ -68,13 +69,83 @@ namespace Sys.Services.Action
                 PassWord = _cryptographyService.StringEncript(model.PassWord)
             };
 
-            if (string.IsNullOrEmpty(_credencialsRepository.ListByLogin(credencials).Login))
+            if (_credencialsRepository.ListByLogin(credencials) == null)
                 credencials = _credencialsRepository.Insert(credencials);
             else
                 throw new Exception("Login solicitado já está em uso.");
 
-            return user;
+            return Task.FromResult(user);
         }
 
+        public Task<UserInfo> UserAuthenticate(UserRequest userRequest)
+        {
+            var credencials = _credencialsRepository.ListByLogin(
+                    new Model.Database.Usuarios.Credencials()
+                    {
+                        Login = userRequest.Login
+                    }
+                );
+            if (credencials == null)
+                throw new Exception($"Login não encontrado");
+
+            if(userRequest.Password != _cryptographyService.StringDecript(credencials.PassWord))
+                throw new Exception($"Senha Incorreta");
+
+            var user = _usersRepository.ListById(
+                    new Model.Database.Usuarios.User() 
+                    { 
+                        Id = credencials.UserId
+                    }
+                );
+
+            UserInfo userInfo = new UserInfo()
+            {
+                Id = user.Id,
+                CPF = user.CPF,
+                DataBirth = user.DataBirth,
+                DataRegister = user.DataRegister,
+                Gen = user.Gen,
+                Login = credencials.Login,
+                PassWord = credencials.PassWord,
+                Name = user.Name,
+                UniqueKey = user.UniqueKey
+            };
+
+            return Task.FromResult(userInfo);
+        }
+
+        public Task<UserInfo> GetUser(UserRequest userRequest)
+        {
+            var credencials = _credencialsRepository.ListByLogin(
+                    new Model.Database.Usuarios.Credencials()
+                    {
+                        Login = userRequest.Login
+                    }
+                );
+            if (credencials == null)
+                throw new Exception($"Login não encontrado");
+
+            var user = _usersRepository.ListById(
+                   new Model.Database.Usuarios.User()
+                   {
+                       Id = credencials.UserId
+                   }
+               );
+
+            UserInfo userInfo = new UserInfo()
+            {
+                Id = user.Id,
+                CPF = user.CPF,
+                DataBirth = user.DataBirth,
+                DataRegister = user.DataRegister,
+                Gen = user.Gen,
+                Login = credencials.Login,
+                PassWord = credencials.PassWord,
+                Name = user.Name,
+                UniqueKey = user.UniqueKey
+            };
+
+            return Task.FromResult(userInfo);
+        }
     }
 }

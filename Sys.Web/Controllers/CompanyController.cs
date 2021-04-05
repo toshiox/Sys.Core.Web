@@ -33,7 +33,7 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<Model.Services.Common.Result> RegisterCompany([FromBody] Empresa empresa)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
 
             if (Validate.Success)
             {
@@ -75,7 +75,7 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<Model.Services.Common.Result> UpdateCompany([FromBody] Empresa empresa)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
 
             if (Validate.Success)
             {
@@ -117,7 +117,7 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<Model.Services.Common.Result> ListCompany()
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
 
             if (Validate.Success)
             {

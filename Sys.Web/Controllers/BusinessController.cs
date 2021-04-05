@@ -29,7 +29,7 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<Model.Services.Common.Result> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
 
             if (Validate.Success)
             {
