@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Web.Http.Cors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -80,7 +81,7 @@ namespace Sys.Web.Controllers
             
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("UserToken")]
         [SwaggerOperation("Gerar Token", "Cria token de segurança para segregação de acesso dos usuarios", Tags = new string[1] { "Authentication" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]

@@ -29,8 +29,8 @@ namespace Sys.Web.Controllers
         [Route("Register")]
         [SwaggerOperation("Cadastrar Novo Usuario", "Cadastra novo usuário para acessar o sistema", Tags = new string[1] { "User" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CreateUserRequest))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(CreateUserRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(UserRequest))]
         public async Task<Model.Services.Common.Result> RegisterUser([FromBody] CreateUserRequest model)
         {
             var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
@@ -71,8 +71,8 @@ namespace Sys.Web.Controllers
         [Route("UserInfo")]
         [SwaggerOperation("Resgatar Informações Usuário", "Resgatar informações do usuário na base de dados", Tags = new string[1] { "User" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(UserRequest))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(UserRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(UserRequest))]
         public async Task<Model.Services.Common.Result> UserInfo([FromBody] UserRequest model)
         {
             var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
@@ -84,6 +84,47 @@ namespace Sys.Web.Controllers
                     Model.Services.Common.Result result = new Model.Services.Common.Result();
 
                     result.Data = await _userManagerService.GetUser(model);
+                    result.Success = true;
+                    result.ResultMessage = "Infomações Listadas com sucesso";
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    return new Model.Services.Common.Result()
+                    {
+                        Success = false,
+                        ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                    };
+                }
+            }
+            else
+            {
+                return new Model.Services.Common.Result()
+                {
+                    Success = false,
+                    ResultMessage = $"Token Inválido, Descricao: {Validate.ResultMessage}"
+                };
+            }
+        }
+
+        [HttpPost]
+        [Route("UserUpdate")]
+        [SwaggerOperation("Alterar Usuario", "Alterar informãções do usuário", Tags = new string[1] { "User" })]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(UserRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(UserRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(UserRequest))]
+        public async Task<Model.Services.Common.Result> UpdateInfo([FromBody] UserRequest model)
+        {
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
+
+            if (Validate.Success)
+            {
+                try
+                {
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _userManagerService.PasswordUpdate(model);
                     result.Success = true;
                     result.ResultMessage = "Infomações Listadas com sucesso";
 

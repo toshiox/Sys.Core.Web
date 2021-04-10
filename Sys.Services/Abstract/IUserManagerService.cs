@@ -11,5 +11,7 @@ namespace Sys.Services.Abstract
         Task<UserInfo> UserAuthenticate(UserRequest userRequest);
 
         Task<UserInfo> GetUser(UserRequest userRequest);
+
+        Task<UserRequest> PasswordUpdate(UserRequest userRequest);
     }
 }

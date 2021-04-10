@@ -1,10 +1,7 @@
 ﻿using Sys.Database.Repository.Scheme.Usuarios.Credencials;
 using Sys.Database.Repository.Scheme.Usuarios.Users;
-using Sys.Model.Services.Common;
 using Sys.Model.Services.User;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Sys.Services.Action
@@ -146,6 +143,24 @@ namespace Sys.Services.Action
             };
 
             return Task.FromResult(userInfo);
+        }
+
+        public Task<UserRequest> PasswordUpdate(UserRequest userRequest)
+        {
+            var credencials = _credencialsRepository.ListByLogin(
+                   new Model.Database.Usuarios.Credencials()
+                   {
+                       Login = userRequest.Login
+                   }
+               );
+
+            credencials.PassWord = _cryptographyService.StringEncript(userRequest.Password);
+
+            _credencialsRepository.Update(credencials);
+
+            userRequest.Password = credencials.PassWord;
+
+            return Task.FromResult(userRequest);
         }
     }
 }

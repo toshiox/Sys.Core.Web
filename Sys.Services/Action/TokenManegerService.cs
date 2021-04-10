@@ -119,7 +119,7 @@ namespace Sys.Services.Action
             ClaimsIdentity claimsIdentity = new ClaimsIdentity();
             Token token = new Token();
 
-            var user = await _userManagerService.GetUser(userRequest);
+            var user = await _userManagerService.UserAuthenticate(userRequest);
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
