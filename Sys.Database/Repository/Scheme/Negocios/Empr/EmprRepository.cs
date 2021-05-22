@@ -11,7 +11,6 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
     {
         public EmprRepository()
         {
-
         }
 
         #region List
@@ -49,6 +48,22 @@ namespace Sys.Database.Repository.Scheme.Negocios.Empr
 
             return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_LIST002]", listOfParameters))?.ToList().FirstOrDefault();
         }
+
+        public Sys.Model.Database.Negocios.Empresa ListByFantasyName(Sys.Model.Database.Negocios.Empresa model)
+        {
+            List<IDbDataParameter> listOfParameters = new System.Collections.Generic.List<IDbDataParameter>();
+            SqlParameter parameter = null;
+
+            parameter = new System.Data.SqlClient.SqlParameter("@NOME_FATS", SqlDbType.VarChar)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.FantasyName
+            };
+            listOfParameters.Add(parameter);
+
+            return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_EMPR_LIST003]", listOfParameters))?.ToList().FirstOrDefault();
+        }
+
 
         #endregion
 

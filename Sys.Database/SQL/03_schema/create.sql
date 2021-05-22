@@ -9,3 +9,6 @@ GO
 
 CREATE SCHEMA Usuarios;
 GO	
+
+CREATE SCHEMA Front;
+GO	

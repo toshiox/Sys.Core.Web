@@ -31,7 +31,10 @@ namespace Sys.DependencyResolution.Database
          
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Usuarios.Users.IUsersRepository, Sys.Database.Repository.Scheme.Usuarios.Users.UsersRepository>();
             serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Usuarios.Credencials.ICredencialsRepository, Sys.Database.Repository.Scheme.Usuarios.Credencials.CredencialsRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Usuarios.Acesso.IAcessRepository, Sys.Database.Repository.Scheme.Usuarios.Acesso.AcessRepository>();
 
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Front.Menu.IMenuRepository, Sys.Database.Repository.Scheme.Front.Menu.MenuRepository>();
+            serviceCollection.AddScoped<Sys.Database.Repository.Scheme.Front.Group.IGroupRepository, Sys.Database.Repository.Scheme.Front.Group.GroupRepository>();
         }
     }
 }

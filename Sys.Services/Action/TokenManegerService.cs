@@ -113,7 +113,7 @@ namespace Sys.Services.Action
 
             return Task.FromResult(requestToken);
         }
-
+        
         public async Task<Token> CreateUserToken(UserRequest userRequest)
         {
             ClaimsIdentity claimsIdentity = new ClaimsIdentity();
@@ -131,8 +131,8 @@ namespace Sys.Services.Action
                            SecurityAlgorithms.HmacSha256Signature
                        )
             };
-            
-            claimsIdentity.AddClaim(new Claim(ClaimTypes.SerialNumber, user.PassWord));
+
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.SerialNumber, user.Id.ToString()));
             claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.UniqueKey));
 
             tokenDescriptor.Subject = claimsIdentity;
@@ -144,6 +144,22 @@ namespace Sys.Services.Action
             return token;
         }
 
+        public Task<ValidateUserToken> DecriptUserToken(HttpContext httpContext)
+        {
+            ValidateUserToken requestToken = new ValidateUserToken();
 
+            var identity = httpContext.User.Identity as ClaimsIdentity;
+
+            foreach (var claim in identity.Claims)
+            {
+                if (claim.Type.Contains("serialnumber"))
+                    requestToken.Id = Convert.ToInt32(claim.Value);
+
+                if (claim.Type.Contains("nameidentifier"))
+                    requestToken.UniqueKey = Guid.Parse(claim.Value);
+            }
+
+            return Task.FromResult(requestToken);
+        }
     }
 }

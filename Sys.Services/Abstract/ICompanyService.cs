@@ -12,5 +12,6 @@ namespace Sys.Services.Abstract
         Task<Empresa> RegisterCompany(Model.Database.Negocios.Empresa empresa);
         Task<Empresa> UpdateCompany(Model.Database.Negocios.Empresa empresa);
         Task<List<CompanyRequest>> ListCompany();
+        Task<CompanyRequest> ListByName(FantasyName FantasyName);
     }
 }

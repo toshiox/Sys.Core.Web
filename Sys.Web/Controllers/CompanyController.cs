@@ -117,36 +117,52 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<Model.Services.Common.Result> ListCompany()
         {
-            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
-
-            if (Validate.Success)
+            try
             {
-                try
-                {
-                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
 
-                    result.Data = await _companyService.ListCompany();
+                result.Data = await _companyService.ListCompany();
 
-                    result.Success = true;
-                    result.ResultMessage = "Empresas listadas com sucesso";
+                result.Success = true;
+                result.ResultMessage = "Empresas listadas com sucesso";
 
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    return new Model.Services.Common.Result()
-                    {
-                        Success = false,
-                        ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
-                    };
-                }
+                return result;
             }
-            else
+            catch (Exception ex)
             {
                 return new Model.Services.Common.Result()
                 {
                     Success = false,
-                    ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
+                    ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                };
+            }
+        }
+
+        [HttpPost]
+        [Route("ListByName")]
+        [SwaggerOperation("Lista por nome fantasia", "Lista empresa por nome fantasia", Tags = new string[1] { "Company" })]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
+        public async Task<Model.Services.Common.Result> ListByName(FantasyName fantasyName)
+        {
+            try
+            {
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _companyService.ListByName(fantasyName);
+
+                result.Success = true;
+                result.ResultMessage = "Empresas listadas com sucesso";
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new Model.Services.Common.Result()
+                {
+                    Success = false,
+                    ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
                 };
             }
         }

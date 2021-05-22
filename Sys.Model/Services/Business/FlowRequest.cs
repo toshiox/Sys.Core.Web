@@ -9,7 +9,7 @@ namespace Sys.Model.Services.Business
         public string CNPJ { get; set; }
         public double Value { get; set; }
         public string Description { get; set; }
-        public string FlowType { get; set; }
+        public int FlowType { get; set; }
         public string MonthReference { get; set; }
     }
 }

@@ -29,36 +29,23 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
         public async Task<Model.Services.Common.Result> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
         {
-            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
-
-            if (Validate.Success)
+            try
             {
-                try
-                {
-                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
 
-                    result.Data = await _businessService.RegisterFlow(model);
+                result.Data = await _businessService.RegisterFlow(model);
 
-                    result.Success = true;
-                    result.ResultMessage = "Fluxo cadastrado com sucesso";
+                result.Success = true;
+                result.ResultMessage = "Fluxo cadastrado com sucesso";
 
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    return new Model.Services.Common.Result()
-                    {
-                        Success = false,
-                        ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
-                    };
-                }
+                return result;
             }
-            else
+            catch (Exception ex)
             {
                 return new Model.Services.Common.Result()
                 {
                     Success = false,
-                    ResultMessage = $"Token invalido. Erro: {Validate.ResultMessage}"
+                    ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
                 };
             }
         }

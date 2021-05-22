@@ -89,5 +89,30 @@ namespace Sys.Services.Action
 
             return Task.FromResult(companyRequest);
         }
+
+        public Task<CompanyRequest> ListByName(FantasyName FantasyName)
+        {
+            var empresa = _emprRepository.ListByFantasyName(
+                    new Empresa()
+                    {
+                        FantasyName = FantasyName.fantasyName
+                    }
+                );
+
+            var taxas = _taxRepository.ListByCompany(
+                    new Tax()
+                    {
+                        IdCompany = Convert.ToInt32(empresa.id)
+                    }
+                );
+
+            CompanyRequest request = new CompanyRequest()
+            {
+                Empresa = empresa,
+                Taxas = taxas
+            };
+
+            return Task.FromResult(request);
+        }
     }
 }

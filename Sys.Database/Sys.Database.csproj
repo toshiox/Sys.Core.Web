@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationManifest>SQL\05_procedures\Front\001.Front.Menu\006.Pr_MENU_UPDATE.sql</ApplicationManifest>
   </PropertyGroup>
 
   <ItemGroup>

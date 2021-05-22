@@ -1,8 +1,8 @@
 ﻿USE [dbSyS]
 GO
 
-IF EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = object_id(N'[Usuarios].[CREDTN]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) 
-	DROP TABLE [Usuarios].[CREDTN]
+IF EXISTS (SELECT 1 FROM dbo.sysobjects WHERE id = object_id(N'[Usuarios].[CRED]') AND OBJECTPROPERTY(id, N'IsUserTable') = 1) 
+	DROP TABLE [Usuarios].[CRED]
 GO
 
 CREATE TABLE [Usuarios].[CRED]

@@ -15,14 +15,33 @@ namespace Sys.Web.Controllers
     public class UserController : Services.Common.BaseController<CreateUserRequest>
     {
         private readonly IUserManagerService _userManagerService;
+        private readonly IPermissionControlService _permissionControlService;
 
         public UserController(
              IUserManagerService userManagerService,
             Services.Abstract.ITokenManegerService tokenManegerService,
-            ILogger<CreateUserRequest> logger
+            ILogger<CreateUserRequest> logger,
+            IPermissionControlService permissionControlService
             ) : base(logger, tokenManegerService)
         {
             _userManagerService = userManagerService;
+            _permissionControlService = permissionControlService;
+        }
+
+        [HttpGet]
+        [Route("teste")]
+        public Model.Services.Common.Result teste()
+        {
+            return new Model.Services.Common.Result()
+            {
+                ResultMessage = "ola",
+                Success = true,
+                Data = new Model.Services.User.CreateUserRequest()
+                {
+                    CPF = "40011051876",
+                    Name = "Gustavo Toshio"
+                }
+            };
         }
 
         [HttpPost]
@@ -148,5 +167,34 @@ namespace Sys.Web.Controllers
                 };
             }
         }
+
+        [HttpGet]
+        [Route("UserPermission")]
+        [SwaggerOperation("Listar Permissões", "Listar permissões usuários", Tags = new string[1] { "User" })]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(UserRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(UserRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(UserRequest))]
+        public async Task<Model.Services.Common.Result> ListPermission()
+        {
+            try
+            {
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _permissionControlService.GetMenu(HttpContext);
+                result.Success = true;
+                result.ResultMessage = "Infomações Listadas com sucesso";
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new Model.Services.Common.Result()
+                {
+                    Success = false,
+                    ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                };
+            }
+        }
+        
     }
 }

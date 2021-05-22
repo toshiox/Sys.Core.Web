@@ -11,5 +11,6 @@ namespace Sys.Services.Abstract
         Task<Token> CreateServiceToken(RequestToken requestToken);
         Task<Token> CreateUserToken(UserRequest userRequest);
         Task<ValidateToken> ValidateServiceToken(HttpContext httpContext);
+        Task<ValidateUserToken> DecriptUserToken(HttpContext httpContext);
     }
 }

@@ -1,9 +1,9 @@
-﻿If Not Exists (SELECT 'S' FROM sys.procedures WHERE OBJECT_ID = OBJECT_ID('[Negocios].[Pr_EMPR_LIST002]'))
-    exec sp_executesql N'Create Procedure[Negocios].[Pr_EMPR_LIST002] As Begin SET NOCOUNT ON; End'
+﻿If Not Exists (SELECT 'S' FROM sys.procedures WHERE OBJECT_ID = OBJECT_ID('[Negocios].[Pr_EMPR_LIST003]'))
+    exec sp_executesql N'Create Procedure[Negocios].[Pr_EMPR_LIST003] As Begin SET NOCOUNT ON; End'
 GO
 --*
-Alter Procedure [Negocios].[Pr_EMPR_LIST002](
-    @PK_EMPR    int 
+Alter Procedure [Negocios].[Pr_EMPR_LIST003](
+    @NOME_FATS    varchar(100) 
 )
 As
 Begin
@@ -22,7 +22,7 @@ Begin
           ,[END_CEP]
           ,[DT_CAD]
     FROM [Negocios].[EMPR]
-    WHERE [PK_EMPR] = @PK_EMPR
+    WHERE [NOME_FATS] = @NOME_FATS
 End;
 GO
 
