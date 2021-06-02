@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -28,23 +29,8 @@ namespace Sys.Web.Controllers
             _permissionControlService = permissionControlService;
         }
 
-        [HttpGet]
-        [Route("teste")]
-        public Model.Services.Common.Result teste()
-        {
-            return new Model.Services.Common.Result()
-            {
-                ResultMessage = "ola",
-                Success = true,
-                Data = new Model.Services.User.CreateUserRequest()
-                {
-                    CPF = "40011051876",
-                    Name = "Gustavo Toshio"
-                }
-            };
-        }
-
         [HttpPost]
+        [Authorize]
         [Route("Register")]
         [SwaggerOperation("Cadastrar Novo Usuario", "Cadastra novo usuário para acessar o sistema", Tags = new string[1] { "User" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CreateUserRequest))]
@@ -85,8 +71,8 @@ namespace Sys.Web.Controllers
             }
         }
 
-
         [HttpGet]
+        [Authorize]
         [Route("UserInfo")]
         [SwaggerOperation("Resgatar Informações Usuário", "Resgatar informações do usuário na base de dados", Tags = new string[1] { "User" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(UserRequest))]
@@ -128,6 +114,7 @@ namespace Sys.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("UserUpdate")]
         [SwaggerOperation("Alterar Usuario", "Alterar informãções do usuário", Tags = new string[1] { "User" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(UserRequest))]
@@ -169,6 +156,7 @@ namespace Sys.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("UserPermission")]
         [SwaggerOperation("Listar Permissões", "Listar permissões usuários", Tags = new string[1] { "User" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(UserRequest))]

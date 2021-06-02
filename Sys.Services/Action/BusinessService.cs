@@ -23,34 +23,35 @@ namespace Sys.Services.Action
             {
                 CNPJ = model.CNPJ,
                 Description = model.Description,
-                //FlowType = model.FlowType,
+                FlowType = model.FlowType.ToString(),
                 Value = model.Value
             };
 
-            //Model.Database.Negocios.Empresa empresa = _businessRepository.GetEmpresa(
-            //    new Model.Database.Negocios.Empresa()
-            //    {
-            //        CNPJ = model.CNPJ
-            //    });
+            Model.Database.Negocios.Empresa empresa = _businessRepository.GetEmpresa(
+                new Model.Database.Negocios.Empresa()
+                {
+                    CNPJ = model.CNPJ
+                });
 
-            //Model.Database.Negocios.TypFlx typFlx = _businessRepository.GetFlowType(
-            //    new Model.Database.Negocios.TypFlx()
-            //    {
-            //        TypeFlow = model.FlowType
-            //    });
+            Model.Database.Negocios.TypFlx typFlx = _businessRepository.GetFlowType(
+                new Model.Database.Negocios.TypFlx()
+                {
+                    TypeFlow = model.FlowType.ToString()
+                });
 
-            //Model.Database.Negocios.Finac finac = _businessRepository.RegisterFlow(
-            //    new Model.Database.Negocios.Finac()
-            //    {
-            //        MonthReference = model.MonthReference,
-            //        IdCompany = empresa.id,
-            //        IdFlowType = typFlx.Id,
-            //        Description = model.Description,
-            //        Value = model.Value,
-            //        DataRegister = System.DateTime.Now
-            //    });
+            Model.Database.Negocios.Finac finac = _businessRepository.RegisterFlow(
+                new Model.Database.Negocios.Finac()
+                {
+                    MonthReference = model.MonthReference,
+                    IdCompany = empresa.id,
+                    IdFlowType = typFlx.Id,
+                    Description = model.Description,
+                    Value = model.Value,
+                    DataRegister = System.DateTime.Now,
+                    ParcelAmount = model.ParcelAmount
+                });
 
-            //flow.IdFlow = finac.Id;
+            flow.IdFlow = finac.Id;
 
             return Task.FromResult(flow);
         }

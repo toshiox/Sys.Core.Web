@@ -45,7 +45,7 @@ namespace Sys.Services.Action
             {
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Sys.Model.Services.Struct.Authentication.Token.Key)),
+                    new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Model.Services.Struct.Authentication.Token.Key)),
                             SecurityAlgorithms.HmacSha256Signature
                         )
             };
@@ -54,6 +54,7 @@ namespace Sys.Services.Action
             {
                 claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, item.Name));
             }
+
             claimsIdentity.AddClaim(new Claim(ClaimTypes.SerialNumber, model.Secret.SecretValue));
             claimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.Client.UniqueKey));
             claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, model.GrantType.Type));

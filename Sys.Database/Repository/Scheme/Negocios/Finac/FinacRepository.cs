@@ -99,6 +99,13 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
             };
             listOfParameters.Add(parameter);
 
+            parameter = new System.Data.SqlClient.SqlParameter("@NR_PARC", SqlDbType.Int)
+            {
+                Direction = ParameterDirection.Input,
+                Value = model.ParcelAmount
+            };
+            listOfParameters.Add(parameter);
+
             return LoopDataReaderRows((SqlDataReader)ExecuteQuery("[Negocios].[Pr_FINAC_INSERT]", listOfParameters)).LastOrDefault();
         }
         #endregion
@@ -134,7 +141,8 @@ namespace Sys.Database.Repository.Scheme.Negocios.Finac
                     IdFlowType = sqlDataReader.GetInt32(2),
                     Description = sqlDataReader.GetString(3),
                     Value = sqlDataReader.GetDouble(4),
-                    MonthReference = sqlDataReader.GetString(5)
+                    MonthReference = sqlDataReader.GetString(5),
+                    ParcelAmount = sqlDataReader.GetInt32(7)
                 };
 
                 if (!sqlDataReader.IsDBNull(6))

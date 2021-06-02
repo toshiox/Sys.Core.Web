@@ -15,6 +15,7 @@ Begin
       ,[VLR]
       ,[MES_REF]
       ,[DT_CAD]
+      ,[NR_PARC]
   FROM [dbSyS].[Negocios].[FINAC]
   WHERE [PK_FINAC] = @PK_FINAC
 End;

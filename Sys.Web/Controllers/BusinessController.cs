@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,10 +24,11 @@ namespace Sys.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("FlowRegister")]
         [SwaggerOperation("Cadastrar Fluxo de Caixa", "Cadastro fluxo de caixa de empresa", Tags = new string[1] { "Business" })]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Common.Result))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Common.Result))]
         public async Task<Model.Services.Common.Result> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
         {
             try
