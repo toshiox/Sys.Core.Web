@@ -7,6 +7,9 @@ namespace Sys.Model.Services.Common
     public class Result
     {
         public bool Success { get; set; }
+
         public string ResultMessage { get; set; }
+
+        public object Data { get; set; }
     }
 }

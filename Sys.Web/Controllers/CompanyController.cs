@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,24 +27,31 @@ namespace Sys.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Register")]
         [SwaggerOperation("Cadastrar Empresa", "Insere informações da empresa no banco de dados", Tags = new string[1] { "Company" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<CompanyRequest> RegisterCompany([FromBody] Empresa empresa)
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Common.Result))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Common.Result))]
+        public async Task<Model.Services.Common.Result> RegisterCompany([FromBody] Empresa empresa)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
 
             if (Validate.Success)
             {
                 try
                 {
-                    return await _companyService.RegisterCompany(empresa);
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _companyService.RegisterCompany(empresa);
+                    result.Success = true;
+                    result.ResultMessage = "Empresa cadastrada com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    return new CompanyRequest()
+                    return new Model.Services.Common.Result()
                     {
 
                         Success = false,
@@ -53,7 +61,7 @@ namespace Sys.Web.Controllers
             }
             else
             {
-                return new CompanyRequest()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
                     ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
@@ -62,24 +70,32 @@ namespace Sys.Web.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("Update")]
         [SwaggerOperation("Atualiza Informações Empresa", "Atualiza informações cadastadas da empresa", Tags = new string[1] { "Company" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<CompanyRequest> UpdateCompany([FromBody] Empresa empresa)
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Common.Result))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Common.Result))]
+        public async Task<Model.Services.Common.Result> UpdateCompany([FromBody] Empresa empresa)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
 
             if (Validate.Success)
             {
                 try
                 {
-                    return await _companyService.UpdateCompany(empresa);
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _companyService.UpdateCompany(empresa);
+
+                    result.Success = true;
+                    result.ResultMessage = "Empresa Atualizada com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    return new CompanyRequest()
+                    return new Model.Services.Common.Result()
                     {
                         Success = false,
                         ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
@@ -88,7 +104,7 @@ namespace Sys.Web.Controllers
             }
             else
             {
-                return new CompanyRequest()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
                     ResultMessage = $"Token Inválido, Descrica: {Validate.ResultMessage}"
@@ -97,42 +113,63 @@ namespace Sys.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("List")]
         [SwaggerOperation("Lista Todas Empresa", "Lista todas as empresas cadastradas no banco de dados", Tags = new string[1] { "Company" })]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<List<CompanyRequest>> ListCompany()
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Common.Result))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Common.Result))]
+        public async Task<Model.Services.Common.Result> ListCompany()
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
-            List<CompanyRequest> companyRequest = new List<CompanyRequest>();
-
-            if (Validate.Success)
+            try
             {
-                try
-                {
-                    return await _companyService.ListCompany();
-                }
-                catch (Exception ex)
-                {
-                    companyRequest.Add(new CompanyRequest()
-                    {
-                        Success = true,
-                        ResultMessage = $"Erro Durante a operação. Erro: {ex.Message}"
-                    });
-                }
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _companyService.ListCompany();
+
+                result.Success = true;
+                result.ResultMessage = "Empresas listadas com sucesso";
+
+                return result;
             }
-            else
+            catch (Exception ex)
             {
-                companyRequest.Add(new CompanyRequest()
+                return new Model.Services.Common.Result()
                 {
-                    Success = true,
-                    ResultMessage = $"Token Invalido. Descricao: {Validate.ResultMessage}"
-                });
-
+                    Success = false,
+                    ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                };
             }
+        }
 
-            return companyRequest;
+        [HttpPost]
+        [Authorize]
+        [Route("ListByName")]
+        [SwaggerOperation("Lista por nome fantasia", "Lista empresa por nome fantasia", Tags = new string[1] { "Company" })]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(CompanyRequest))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Common.Result))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Common.Result))]
+        public async Task<Model.Services.Common.Result> ListByName([FromBody] FantasyName fantasyName)
+        {
+            try
+            {
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                result.Data = await _companyService.ListByName(fantasyName);
+
+                result.Success = true;
+                result.ResultMessage = "Empresas listadas com sucesso";
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new Model.Services.Common.Result()
+                {
+                    Success = false,
+                    ResultMessage = $"Ocorreu um erro durante a operação, Descricao: {ex.Message}"
+                };
+            }
         }
     }
 }

@@ -10,5 +10,7 @@ namespace Sys.Model.Services.Business
         public double Value { get; set; }
         public string Description { get; set; }
         public string FlowType { get; set; }
+        public string MonthReference { get; set; }
+        public int ParcelAmount { get; set; }
     }
 }

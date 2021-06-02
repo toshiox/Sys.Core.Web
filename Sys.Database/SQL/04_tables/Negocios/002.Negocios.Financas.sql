@@ -12,6 +12,7 @@ CREATE TABLE [Negocios].[FINAC]
 	FK_TYPFLX		int not null,
 	DESC_VLR		varchar(300),
 	VLR				float,
+	MES_REF			varchar(10),
 	DT_CAD			datetime
 )
 GO

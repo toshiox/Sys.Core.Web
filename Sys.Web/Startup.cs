@@ -10,11 +10,15 @@ using System.Text;
 using Microsoft.IdentityModel.Logging;
 using System.Security.Claims;
 using System.Linq;
+using System.Web.Http;
 
 namespace Sys.Web
 {
     public class Startup
     {
+
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,7 +28,17 @@ namespace Sys.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            IdentityModelEventSource.ShowPII = true;
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder => builder
+                                  .AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader()
+                                  );
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -82,14 +96,11 @@ namespace Sys.Web
             }
 
             app.UseStaticFiles();
-
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthentication();
-
             app.UseAuthorization();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {

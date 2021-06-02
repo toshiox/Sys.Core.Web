@@ -39,7 +39,8 @@ namespace Sys.Database
                 app.UseDeveloperExceptionPage();
             }
 
-
+            Byte[] bytes = File.ReadAllBytes(@"D:\Toshio Soft\Informações Empresa\WhatsApp Image 2021-02-12 at 13.34.11.PNG");
+            String file = Convert.ToBase64String(bytes);
         }
     }
 }

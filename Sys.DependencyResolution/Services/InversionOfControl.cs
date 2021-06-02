@@ -14,6 +14,8 @@ namespace Sys.DependencyResolution.Services
             serviceCollection.AddScoped<Sys.Services.Abstract.ICompanyService, Sys.Services.Action.CompanyService>();
             serviceCollection.AddScoped<Sys.Services.Abstract.IBusinessService, Sys.Services.Action.BusinessService>();
             serviceCollection.AddScoped<Sys.Services.Abstract.ICryptographyService, Sys.Services.Action.CryptographyService>();
+            serviceCollection.AddScoped<Sys.Services.Abstract.IUserManagerService, Sys.Services.Action.UserManagerService>();
+            serviceCollection.AddScoped<Sys.Services.Abstract.IPermissionControlService, Sys.Services.Action.PermissionControlService>();
         }
     }
 }

@@ -4,10 +4,12 @@ GO
 --*
 Alter Procedure [Negocios].[Pr_FINAC_INSERT](
     @FK_EMPR    int,
-    @FK_TYPFLX    int,
+    @FK_TYPFLX  int,
     @DESC_VLR   varchar(300),
     @VLR        float,
-    @DT_CAD     datetime
+    @MES_REF    varchar(20),
+    @DT_CAD     datetime,
+    @NR_PARC    int
 )
 As
 Begin
@@ -16,13 +18,17 @@ INSERT INTO [Negocios].[FINAC]
            ,[FK_TYPFLX]
            ,[DESC_VLR]
            ,[VLR]
-           ,[DT_CAD])
+           ,[MES_REF]
+           ,[DT_CAD]
+           ,[NR_PARC])
      VALUES
            (@FK_EMPR
            ,@FK_TYPFLX
            ,@DESC_VLR
            ,@VLR     
-           ,@DT_CAD  )
+           ,@MES_REF
+           ,@DT_CAD  
+           ,@NR_PARC)
 
 SELECT TOP 1 * FROM [Negocios].[FINAC] ORDER BY [DT_CAD] DESC
 End;

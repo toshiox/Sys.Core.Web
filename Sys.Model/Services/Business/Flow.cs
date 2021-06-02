@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Sys.Model.Services.Business
 {
-    public class Flow : Common.Result
+    public class Flow 
     {
         public decimal IdFlow{get;set;}
         public string CNPJ { get; set; }

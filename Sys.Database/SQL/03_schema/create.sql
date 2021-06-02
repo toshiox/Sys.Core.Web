@@ -6,3 +6,9 @@ GO
 
 CREATE SCHEMA Negocios;
 GO	
+
+CREATE SCHEMA Usuarios;
+GO	
+
+CREATE SCHEMA Front;
+GO	

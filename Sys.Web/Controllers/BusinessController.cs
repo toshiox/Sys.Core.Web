@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,35 +24,30 @@ namespace Sys.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("FlowRegister")]
         [SwaggerOperation("Cadastrar Fluxo de Caixa", "Cadastro fluxo de caixa de empresa", Tags = new string[1] { "Business" })]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Authentication.Token))]
-        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Authentication.Token))]
-        public async Task<Model.Services.Business.Flow> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Model.Services.Common.Result))]
+        [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Model.Services.Common.Result))]
+        public async Task<Model.Services.Common.Result> FlowRegister([FromBody] Model.Services.Business.FlowRequest model)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
+            try
+            {
+                Model.Services.Common.Result result = new Model.Services.Common.Result();
 
-            if (Validate.Success)
-            {
-                try
-                {
-                    return await _businessService.RegisterFlow(model);
-                }
-                catch (Exception ex)
-                {
-                    return new Model.Services.Business.Flow()
-                    {
-                        Success = false,
-                        ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
-                    };
-                }
+                result.Data = await _businessService.RegisterFlow(model);
+
+                result.Success = true;
+                result.ResultMessage = "Fluxo cadastrado com sucesso";
+
+                return result;
             }
-            else
+            catch (Exception ex)
             {
-                return new Model.Services.Business.Flow()
+                return new Model.Services.Common.Result()
                 {
                     Success = false,
-                    ResultMessage = $"Token invalido. Erro: {Validate.ResultMessage}"
+                    ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
                 };
             }
         }

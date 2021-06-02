@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Sys.Model.Database.Negocios;
+using Sys.Model.Services.Company;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,8 +9,9 @@ namespace Sys.Services.Abstract
 {
     public interface ICompanyService
     {
-        Task<Model.Services.Company.CompanyRequest> RegisterCompany(Model.Database.Negocios.Empresa empresa);
-        Task<Model.Services.Company.CompanyRequest> UpdateCompany(Model.Database.Negocios.Empresa empresa);
-        Task<List<Model.Services.Company.CompanyRequest>> ListCompany();
+        Task<Empresa> RegisterCompany(Model.Database.Negocios.Empresa empresa);
+        Task<Empresa> UpdateCompany(Model.Database.Negocios.Empresa empresa);
+        Task<List<CompanyRequest>> ListCompany();
+        Task<CompanyRequest> ListByName(FantasyName FantasyName);
     }
 }

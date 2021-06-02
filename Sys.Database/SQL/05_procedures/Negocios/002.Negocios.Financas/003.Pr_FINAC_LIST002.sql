@@ -13,7 +13,9 @@ Begin
       ,[FK_TYPFLX]
       ,[DESC_VLR]
       ,[VLR]
+      ,[MES_REF]
       ,[DT_CAD]
+      ,[NR_PARC]
   FROM [dbSyS].[Negocios].[FINAC]
   WHERE [FK_EMPR] = @PK_EMPR
 End;

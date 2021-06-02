@@ -32,22 +32,29 @@ namespace Sys.Web.Controllers
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status200OK, "Processado com sucesso", typeof(Database.Model.Application.ApplicationRepository))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status401Unauthorized, "Não Autorizado", typeof(Model.Services.Authentication.Token))]
         [SwaggerResponse(Model.Services.Struct.WebStatus.WebStatusCode.Status500InternalServerError, "Ocorreu um erro não tratado no processamento da requisição", typeof(Database.Model.Application.ApplicationRepository))]
-        public async Task<ActionResult<Database.Model.Application.ApplicationRepository>> GenerateToken([FromBody] Model.Services.Application.Application modelApplication)
+        public async Task<Model.Services.Common.Result> GenerateToken([FromBody] Model.Services.Application.Application modelApplication)
         {
-            var Validate = _tokenManegerService.ValidateToken(HttpContext).Result;
-
+            var Validate = _tokenManegerService.ValidateServiceToken(HttpContext).Result;
+            
             if (Validate.Success)
             {
                 try
                 {
-                    return await _applicationServices.CreateApplication(modelApplication);
+                    Model.Services.Common.Result result = new Model.Services.Common.Result();
+
+                    result.Data = await _applicationServices.CreateApplication(modelApplication);
+
+                    result.Success = true;
+                    result.ResultMessage = "Aplicação criado com sucesso";
+
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    return new Database.Model.Application.ApplicationRepository()
+                    return new Model.Services.Common.Result()
                     {
                         Success = false,
-                        ResultMessage = $"Ocorreu um erro durante a operação. Descricao: {ex.Message}"
+                        ResultMessage = $"Ocorreu um erro durante a operação: Descrição {ex.Message}"
                     };
                 }
             }

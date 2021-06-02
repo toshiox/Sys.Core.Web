@@ -21,105 +21,98 @@ namespace Sys.Services.Action
         {
             Database.Model.Application.ApplicationRepository modelApplication = new Database.Model.Application.ApplicationRepository();
 
-            try
+            #region Criar Aplicacao
+            modelApplication.Client = new Client()
             {
-                #region Criar Aplicacao
-                modelApplication.Client = new Client()
+                Active = true,
+                DateRegister = DateTime.Now,
+                Name = application.Name,
+                Descrition = application.Descrition,
+                UniqueKey = Guid.NewGuid().ToString(),
+            };
+
+            modelApplication.Client = _applicationRepository.CreateApplication(modelApplication.Client);
+
+            modelApplication.UniqueKey = modelApplication.Client.UniqueKey;
+            #endregion
+
+            #region Criar Segredo da Aplicação
+            modelApplication.Secret = new Secret()
+            {
+                DataRegister = DateTime.Now,
+                SecretValue = application.SecretValue,
+                FK_UniqueKeyApp = modelApplication.Client.UniqueKey
+            };
+
+            modelApplication.Secret = _applicationRepository.CreateSecret(modelApplication.Secret);
+            #endregion
+
+            #region Criar Escopos
+            List<Scope> listScopeResult = new List<Scope>();
+
+            foreach (var item in application.Scopes)
+            {
+                var model = new Scope()
                 {
-                    Active = true,
-                    DateRegister = DateTime.Now,
-                    Name = application.Name,
-                    Descrition = application.Descrition,
-                    UniqueKey = Guid.NewGuid().ToString(),
+                    Name = item.ScopeName,
+                    Description = item.Description,
+                    DataRegister = System.DateTime.Now
                 };
 
-                modelApplication.Client = _applicationRepository.CreateApplication(modelApplication.Client);
+                listScopeResult = _applicationRepository.CreateScopes(model);
+            }
+            #endregion
 
-                modelApplication.UniqueKey = modelApplication.Client.UniqueKey;
-                #endregion
+            #region Configurar Escopos da Aplicação
+            modelApplication.Scope = new List<Scope>();
 
-                #region Criar Segredo da Aplicação
-                modelApplication.Secret = new Secret()
+            foreach (var item in listScopeResult)
+            {
+                if (application.Scopes.Exists(ap => ap.ScopeName == item.Name))
                 {
-                    DataRegister = DateTime.Now,
-                    SecretValue = application.SecretValue,
-                    FK_UniqueKeyApp = modelApplication.Client.UniqueKey
-                };
-
-                modelApplication.Secret = _applicationRepository.CreateSecret(modelApplication.Secret);
-                #endregion
-
-                #region Criar Escopos
-                List<Scope> listScopeResult = new List<Scope>();
-
-                foreach (var item in application.Scopes)
-                {
-                    var model = new Scope()
-                    {
-                        Name = item.ScopeName,
-                        Description = item.Description,
-                        DataRegister = System.DateTime.Now
-                    };
-
-                    listScopeResult = _applicationRepository.CreateScopes(model);
-                }
-                #endregion
-
-                #region Configurar Escopos da Aplicação
-                modelApplication.Scope = new List<Scope>();
-
-                foreach (var item in listScopeResult)
-                {
-                    if (application.Scopes.Exists(ap => ap.ScopeName == item.Name))
-                    {
-                        _applicationRepository.ConfigClientScop(
-                            new ClitScopes
-                            {
-                                DataRegister = System.DateTime.Now,
-                                ClientId = modelApplication.Client.UniqueKey,
-                                ScopeId = listScopeResult.Find(scope => scope.Name == item.Name).Id
-                            });
-
-                        modelApplication.Scope.Add(item);
-                    }
-                }
-
-                #endregion
-
-                #region Configurar GrantType da Aplicação
-                List<ClitGrantType> listClitGrantTypeCreate = new List<ClitGrantType>();
-
-                listClitGrantTypeCreate.Add(
-                        new ClitGrantType()
+                    _applicationRepository.ConfigClientScop(
+                        new ClitScopes
                         {
-                            ClientId = modelApplication.Client.UniqueKey,
                             DataRegister = System.DateTime.Now,
-                            GrantTypeId = _applicationRepository.GetGrantType(new GrantType()
-                            {
-                                Type = application.GrantType
-                            }).Id
+                            ClientId = modelApplication.Client.UniqueKey,
+                            ScopeId = listScopeResult.Find(scope => scope.Name == item.Name).Id
                         });
 
-                foreach (var item in listClitGrantTypeCreate)
-                {
-                    _applicationRepository.ConfigClientGrantType(item);
+                    modelApplication.Scope.Add(item);
                 }
+            }
 
-                modelApplication.GrantType = _applicationRepository.GetGrantType(
-                    new GrantType()
+            #endregion
+
+            #region Configurar GrantType da Aplicação
+            List<ClitGrantType> listClitGrantTypeCreate = new List<ClitGrantType>();
+
+            listClitGrantTypeCreate.Add(
+                    new ClitGrantType()
                     {
-                        Type = application.GrantType
+                        ClientId = modelApplication.Client.UniqueKey,
+                        DataRegister = System.DateTime.Now,
+                        GrantTypeId = _applicationRepository.GetGrantType(new GrantType()
+                        {
+                            Type = application.GrantType
+                        }).Id
                     });
-                #endregion
 
-                modelApplication.Success = true;
-                modelApplication.ResultMessage = "Aplicação Criada com Sucesso";
-            }
-            catch (Exception ex)
+            foreach (var item in listClitGrantTypeCreate)
             {
-                modelApplication.Success = true;
-                modelApplication.ResultMessage = $"Ocorreu um Erro ao criar aplicação, Erro: {ex.Message}";
+                _applicationRepository.ConfigClientGrantType(item);
             }
+
+            modelApplication.GrantType = _applicationRepository.GetGrantType(
+                new GrantType()
+                {
+                    Type = application.GrantType
+                });
+            #endregion
+
+            modelApplication.Success = true;
+            modelApplication.ResultMessage = "Aplicação Criada com Sucesso";
+
             return Task.FromResult(modelApplication);
         }
     }
